@@ -99,11 +99,22 @@
         lib = nixpkgs.lib;
       } { };
     }
-    // flake-utils.lib.eachDefaultSystem (system: {
-      packages = import ./packages {
-        inherit my-lib;
-        lib = nixpkgs.lib;
-      } (inputs // { inherit system; });
-      formatter = nixpkgs.legacyPackages.${system}.nixfmt-rfc-style;
-    });
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        packages = import ./packages {
+          inherit my-lib;
+          lib = nixpkgs.lib;
+        } (inputs // { inherit system; });
+
+        formatter = pkgs.nixfmt-tree;
+
+        devShells.default = pkgs.mkShell {
+          packages = [ pkgs.pre-commit ];
+        };
+      }
+    );
 }

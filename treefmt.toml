@@ -1,4 +1,0 @@
-[formatter.nix]
-command = "nix"
-options = ["fmt"]
-includes = [ "*.nix" ]
