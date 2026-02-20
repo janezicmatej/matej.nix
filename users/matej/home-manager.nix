@@ -24,6 +24,8 @@ in
 
     pkgs.starship
 
+    pkgs.claude-code
+
     # git and co
     pkgs.git
     packages.git-linearize
