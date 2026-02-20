@@ -18,22 +18,13 @@ let
     user: import ../users/${user}/home-manager.nix { inherit inputs; }
   );
 
-  gib_in_bytes = 1073741824;
 in
 
 nixpkgs.lib.nixosSystem {
   inherit system;
   modules = [
 
-    {
-      nix.settings = {
-        download-buffer-size = 1 * gib_in_bytes;
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
-      };
-    }
+    ../nix.nix
 
     { nixpkgs.overlays = overlays; }
     { nixpkgs.config.allowUnfree = true; }

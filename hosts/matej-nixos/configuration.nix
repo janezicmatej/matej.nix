@@ -24,11 +24,6 @@ in
 
   yubikey.enable = true;
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
   stylix = {
     enable = true;
     polarity = "dark";
