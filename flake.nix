@@ -40,6 +40,11 @@
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    assets = {
+      url = "git+https://git.janezic.dev/janezicmatej/assets.git";
+      flake = false;
+    };
   };
 
   outputs =

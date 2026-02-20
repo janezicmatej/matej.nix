@@ -32,7 +32,7 @@ in
   stylix = {
     enable = true;
     polarity = "dark";
-    image = "${inputs.self}/assets/wallpaper.png";
+    image = "${inputs.assets}/wallpaper.png";
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
   };
 

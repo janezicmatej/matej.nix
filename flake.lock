@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "assets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771625274,
+        "narHash": "sha256-2wWMWsPnIweJWiojeTXdnsTsKzU9R4igc6p50rEAkpk=",
+        "ref": "refs/heads/main",
+        "rev": "7eceaa56b64490ef15ce651e2376eae553d1d50a",
+        "revCount": 1,
+        "type": "git",
+        "url": "https://git.janezic.dev/janezicmatej/assets.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.janezic.dev/janezicmatej/assets.git"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -463,6 +479,7 @@
     },
     "root": {
       "inputs": {
+        "assets": "assets",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",

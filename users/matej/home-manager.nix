@@ -54,7 +54,7 @@ in
     pkgs.google-cloud-sql-proxy
   ];
 
-  home.file.".assets".source = "${inputs.self}/assets";
+  home.file.".assets".source = inputs.assets;
 
   stylix.targets.neovim.enable = false;
   programs.neovim = {
