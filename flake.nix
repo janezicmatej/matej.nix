@@ -79,7 +79,7 @@
         system = "x86_64-linux";
         format = "install-iso";
         specialArgs = { inherit inputs; };
-        modules = [ ./iso.nix ];
+        modules = [ ./hosts/live-iso/configuration.nix ];
       };
 
       nixosConfigurations = {
