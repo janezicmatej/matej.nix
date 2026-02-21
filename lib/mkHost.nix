@@ -21,9 +21,7 @@ let
   );
 
   # Load home-manager user config
-  userHMConfigs = nixpkgs.lib.genAttrs users (
-    user: import ../users/${user}/home-manager.nix
-  );
+  userHMConfigs = nixpkgs.lib.genAttrs users (user: import ../users/${user}/home-manager.nix);
 
 in
 nixpkgs.lib.nixosSystem {
