@@ -1,7 +1,14 @@
 { pkgs, lib, ... }:
 {
-  # Use zstd instead of xz for compressing the liveUSB image, it's 6x faster and 15% bigger.
-  isoImage.squashfsCompression = "zstd -Xcompression-level 6";
+  image.modules.iso-installer = {
+    isoImage.squashfsCompression = "zstd -Xcompression-level 6";
+  };
+
+  fileSystems."/" = lib.mkDefault {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "ext4";
+  };
+  boot.loader.grub.device = lib.mkDefault "/dev/sda";
 
   services.openssh = {
     enable = true;
@@ -14,10 +21,7 @@
     };
   };
 
-  networking = {
-    useDHCP = true;
-    firewall.allowedTCPPorts = [ 22 ];
-  };
+  networking.firewall.allowedTCPPorts = [ 22 ];
 
   users = {
     groups.matej = {

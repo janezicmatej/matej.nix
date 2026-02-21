@@ -19,7 +19,7 @@ bump: update switch
 
 # build installation iso
 iso:
-    nix build .#live-iso
+    nixos-rebuild build-image --image-variant iso-installer --flake .#live-iso
 
 # garbage collect old generations
 clean:

@@ -17,11 +17,6 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -51,7 +46,6 @@
     inputs@{
       nixpkgs,
       flake-utils,
-      nixos-generators,
       ...
     }:
 
@@ -73,15 +67,6 @@
     {
       lib = my-lib;
 
-      # nix build .#iso
-      # dd bs=4M if=result/iso/my-nixos-live.iso of=/dev/sdX status=progress oflag=sync
-      live-iso = nixos-generators.nixosGenerate {
-        system = "x86_64-linux";
-        format = "install-iso";
-        specialArgs = { inherit inputs; };
-        modules = [ ./hosts/live-iso/configuration.nix ];
-      };
-
       nixosConfigurations = {
         matej-nixos = mkHost "matej-nixos" {
           system = "x86_64-linux";
@@ -92,6 +77,11 @@
           users = [ "matej" ];
         };
 
+        # nixos-rebuild build-image --image-variant install-iso --flake .#live-iso
+        live-iso = mkHost "live-iso" {
+          system = "x86_64-linux";
+          users = [ ];
+        };
       };
 
       nixosModules = import ./modules/nixos {
