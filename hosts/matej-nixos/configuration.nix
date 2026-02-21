@@ -23,6 +23,7 @@ in
     inputs.self.nixosModules.gnupg
     inputs.self.nixosModules.tuigreet
     inputs.self.nixosModules.workstation
+    inputs.self.nixosModules.nvidia
   ];
 
   # Modules
@@ -42,6 +43,8 @@ in
     enable = true;
     cmdFlags = [ "--unsupported-gpu" ];
   };
+
+  nvidia.enable = true;
 
   # Stylix theming
   stylix = {
@@ -87,6 +90,26 @@ in
   # Hardware
   hardware.keyboard.zsa.enable = true;
   hardware.ledger.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+
+  # Networking
+  networking = {
+    hostName = "matej-nixos";
+    useDHCP = false;
+    networkmanager.enable = true;
+    interfaces.enp5s0.ipv4.addresses = [
+      {
+        address = "10.222.0.247";
+        prefixLength = 24;
+      }
+    ];
+    firewall.enable = false;
+    defaultGateway = "10.222.0.1";
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
+  };
 
   # XDG
   xdg.mime.defaultApplications = {
