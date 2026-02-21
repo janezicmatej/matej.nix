@@ -1,5 +1,14 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
+let
+  keys = import ../../users/matej/keys.nix;
+in
 {
+  imports = [
+    inputs.self.nixosModules.openssh
+  ];
+
+  openssh.enable = true;
+
   image.modules.iso-installer = {
     isoImage.squashfsCompression = "zstd -Xcompression-level 6";
   };
@@ -9,17 +18,6 @@
     fsType = "ext4";
   };
   boot.loader.grub.device = lib.mkDefault "/dev/sda";
-
-  services.openssh = {
-    enable = true;
-    ports = [ 22 ];
-    settings = {
-      PasswordAuthentication = false;
-      AllowUsers = null;
-      PermitRootLogin = "no";
-      StreamLocalBindUnlink = "yes";
-    };
-  };
 
   networking.firewall.allowedTCPPorts = [ 22 ];
 
@@ -38,14 +36,9 @@
         "wheel"
         "users"
       ];
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICQGLdINKzs+sEy62Pefng0bcedgU396+OryFgeH99/c janezicmatej"
-      ];
+      openssh.authorizedKeys.keys = keys.sshAuthorizedKeys;
     };
   };
-
-  # boot.extraModulePackages = [ pkgs.linuxPackages.r8125 ];
-  # boot.blacklistedKernelModules = [ "r8169" ];
 
   system.stateVersion = "25.05";
 }

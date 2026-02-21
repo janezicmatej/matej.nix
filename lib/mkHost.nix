@@ -15,8 +15,14 @@ let
   hostHWConfig = ../hosts/${name}/hardware-configuration.nix;
   hasHWConfig = builtins.pathExists hostHWConfig;
 
+  # Load NixOS-level user config (account, groups, SSH keys)
+  userNixosConfigs = map (user: ../users/${user}/nixos.nix) (
+    builtins.filter (user: builtins.pathExists ../users/${user}/nixos.nix) users
+  );
+
+  # Load home-manager user config
   userHMConfigs = nixpkgs.lib.genAttrs users (
-    user: import ../users/${user}/home-manager.nix { inherit inputs; }
+    user: import ../users/${user}/home-manager.nix
   );
 
 in
@@ -31,11 +37,13 @@ nixpkgs.lib.nixosSystem {
     hostConfig
   ]
   ++ nixpkgs.lib.optional hasHWConfig hostHWConfig
+  ++ userNixosConfigs
   ++ [
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
       home-manager.users = userHMConfigs;
       home-manager.extraSpecialArgs = { inherit inputs; };
     }
