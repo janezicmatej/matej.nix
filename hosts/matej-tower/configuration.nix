@@ -69,7 +69,7 @@
   services.pipewire.extraConfig.pipewire.adjust-sample-rate = {
     "context.properties" = {
       "default.clock.rate" = 192000;
-      "defautlt.allowed-rates" = [ 192000 ];
+      "default.allowed-rates" = [ 192000 ];
     };
   };
 
