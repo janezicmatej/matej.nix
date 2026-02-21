@@ -22,6 +22,7 @@
     inputs.self.nixosModules.gnupg
     inputs.self.nixosModules.tuigreet
     inputs.self.nixosModules.workstation
+    inputs.self.nixosModules.initrd-ssh
   ];
 
   # Modules
@@ -37,6 +38,11 @@
     command = "sway";
   };
   sway.enable = true;
+
+  initrd-ssh = {
+    enable = true;
+    networkModule = "r8169";
+  };
 
   # Stylix theming
   stylix = {

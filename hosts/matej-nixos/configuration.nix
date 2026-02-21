@@ -24,6 +24,7 @@ in
     inputs.self.nixosModules.tuigreet
     inputs.self.nixosModules.workstation
     inputs.self.nixosModules.nvidia
+    inputs.self.nixosModules.initrd-ssh
   ];
 
   # Modules
@@ -45,6 +46,17 @@ in
   };
 
   nvidia.enable = true;
+
+  initrd-ssh = {
+    enable = true;
+    networkModule = "r8169";
+    ip = {
+      enable = true;
+      address = "10.222.0.247";
+      gateway = "10.222.0.1";
+      interface = "enp5s0";
+    };
+  };
 
   # Stylix theming
   stylix = {
