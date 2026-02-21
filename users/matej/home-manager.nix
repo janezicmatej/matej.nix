@@ -1,5 +1,3 @@
-{ inputs, ... }:
-
 {
   config,
   lib,
@@ -20,7 +18,6 @@ in
 
   home.packages = [
     pkgs.bibata-cursors
-    pkgs.pinentry-curses
 
     pkgs.starship
 
@@ -54,6 +51,31 @@ in
     # need for gcp stuff
     pkgs.google-cloud-sdk
     pkgs.google-cloud-sql-proxy
+
+    # desktop apps
+    pkgs.vesktop
+    pkgs.rocketchat-desktop
+    pkgs.telegram-desktop
+    pkgs.slack
+    pkgs.ghostty
+    pkgs.google-chrome
+    pkgs.zathura
+    pkgs.pavucontrol
+    pkgs.jellyfin-media-player
+    pkgs.cider-2
+    pkgs.protonmail-bridge
+    pkgs.ledger-live-desktop
+    pkgs.bolt-launcher
+    pkgs.libnotify
+
+    # writing/docs
+    pkgs.mdbook
+    pkgs.marksman
+    pkgs.mdformat
+
+    # security
+    pkgs.gnupg
+    pkgs.pass
   ];
 
   home.file.".assets".source = inputs.assets;
