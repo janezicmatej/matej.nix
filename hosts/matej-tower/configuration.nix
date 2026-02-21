@@ -8,9 +8,11 @@
 }:
 
 {
+  networking.hostName = "matej-tower";
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.lanzaboote.nixosModules.lanzaboote
+
     inputs.self.nixosModules.yubikey
     inputs.self.nixosModules.sway
     inputs.self.nixosModules.openssh
@@ -18,6 +20,8 @@
     inputs.self.nixosModules.printing
     inputs.self.nixosModules.zsh
     inputs.self.nixosModules.gnupg
+    inputs.self.nixosModules.tuigreet
+    inputs.self.nixosModules.workstation
   ];
 
   # Modules
@@ -27,6 +31,11 @@
   printing.enable = true;
   zsh.enable = true;
   gnupg.enable = true;
+  workstation.enable = true;
+  tuigreet = {
+    enable = true;
+    command = "sway";
+  };
   sway.enable = true;
 
   # Stylix theming
@@ -49,29 +58,8 @@
   time.timeZone = "Europe/Ljubljana";
   environment.variables.TZ = "Europe/Ljubljana";
 
-  # Docker
-  virtualisation.docker = {
-    enable = true;
-    logDriver = "json-file";
-  };
-
   # Services
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "both";
-  };
   services.udisks2.enable = true;
-
-  # Greetd
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd sway";
-        user = "greeter";
-      };
-    };
-  };
 
   # Programs
   programs._1password.enable = true;
@@ -87,7 +75,6 @@
 
   # System packages
   environment.systemPackages = with pkgs; [
-    smartmontools
     easyeffects
   ];
 

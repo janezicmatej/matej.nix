@@ -21,6 +21,8 @@ in
     inputs.self.nixosModules.printing
     inputs.self.nixosModules.zsh
     inputs.self.nixosModules.gnupg
+    inputs.self.nixosModules.tuigreet
+    inputs.self.nixosModules.workstation
   ];
 
   # Modules
@@ -30,6 +32,11 @@ in
   printing.enable = true;
   zsh.enable = true;
   gnupg.enable = true;
+  workstation.enable = true;
+  tuigreet = {
+    enable = true;
+    command = "sway";
+  };
 
   sway = {
     enable = true;
@@ -53,12 +60,6 @@ in
   environment.variables.TZ = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Docker
-  virtualisation.docker = {
-    enable = true;
-    logDriver = "json-file";
-  };
-
   # nix-ld for pip-installed binaries
   # WARN:(matej) probably want to drop this in the future
   programs.nix-ld.enable = true;
@@ -70,21 +71,6 @@ in
 
   # Services
   services.teamviewer.enable = true;
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "both";
-  };
-
-  # Greetd
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd sway";
-        user = "greeter";
-      };
-    };
-  };
 
   # Programs
   programs.thunderbird.enable = true;
@@ -101,11 +87,6 @@ in
   # Hardware
   hardware.keyboard.zsa.enable = true;
   hardware.ledger.enable = true;
-
-  # System packages
-  environment.systemPackages = with pkgs; [
-    smartmontools
-  ];
 
   # XDG
   xdg.mime.defaultApplications = {
