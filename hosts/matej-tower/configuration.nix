@@ -53,6 +53,7 @@
   };
 
   # Boot - Lanzaboote secure boot
+  boot.kernelParams = [ "btusb.reset=1" ];
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.lanzaboote = {
