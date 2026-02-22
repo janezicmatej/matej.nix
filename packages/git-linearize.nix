@@ -1,7 +1,6 @@
-{ nixpkgs, system, ... }:
+{ pkgs, ... }:
 
 let
-  pkgs = import nixpkgs { inherit system; };
   version = "main";
 in
 pkgs.stdenv.mkDerivation {

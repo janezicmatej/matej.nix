@@ -1,8 +1,7 @@
-{ nixpkgs-master, system, ... }:
+{ pkgs-master, ... }:
 
 let
-  nixpkgs = nixpkgs-master;
-  pkgs = import nixpkgs { inherit system; };
+  pkgs = pkgs-master;
   version = "e24855c";
 in
 pkgs.buildGoModule.override

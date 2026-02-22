@@ -1,7 +1,6 @@
-{ nixpkgs, system, ... }:
+{ pkgs, ... }:
 
 let
-  pkgs = import nixpkgs { inherit system; };
   version = "C6r62em";
 in
 

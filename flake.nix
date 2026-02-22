@@ -107,10 +107,17 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        packages = import ./packages {
-          inherit my-lib;
-          inherit (nixpkgs) lib;
-        } (inputs // { inherit system; });
+        packages =
+          import ./packages
+            {
+              inherit my-lib;
+              inherit (nixpkgs) lib;
+            }
+            {
+              pkgs = nixpkgs.legacyPackages.${system};
+              pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+              pkgs-master = inputs.nixpkgs-master.legacyPackages.${system};
+            };
 
         formatter = pkgs.nixfmt-tree;
 
