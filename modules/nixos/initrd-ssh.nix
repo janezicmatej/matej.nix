@@ -7,8 +7,6 @@ let
   # TODO:(@janezicmatej) restructure keys import
   keys = import ../../users/matej/keys.nix;
 
-  cfg = config.initrd-ssh;
-
   # generate host keys for new machines: ./scripts/initrd-ssh-keygen.sh
   keyDir = "/etc/secrets/initrd";
 
@@ -63,10 +61,10 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    boot.initrd.kernelModules = [ cfg.networkModule ];
-    boot.kernelParams = lib.mkIf cfg.ip.enable [
-      "ip=${mkIpString cfg.ip}"
+  config = lib.mkIf config.initrd-ssh.enable {
+    boot.initrd.kernelModules = [ config.initrd-ssh.networkModule ];
+    boot.kernelParams = lib.mkIf config.initrd-ssh.ip.enable [
+      "ip=${mkIpString config.initrd-ssh.ip}"
     ];
 
     boot.initrd.network = {
@@ -78,7 +76,7 @@ in
           "${keyDir}/ssh_host_rsa_key"
           "${keyDir}/ssh_host_ed25519_key"
         ];
-        inherit (cfg) authorizedKeys;
+        inherit (config.initrd-ssh) authorizedKeys;
       };
       postCommands = ''
         echo 'cryptsetup-askpass' >> /root/.profile

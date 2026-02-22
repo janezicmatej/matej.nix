@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-let
-  cfg = config.workstation;
-in
 {
   options = {
     workstation = {
@@ -14,7 +11,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.workstation.enable {
     virtualisation.docker = {
       enable = true;
       logDriver = "json-file";

@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-let
-  cfg = config.tuigreet;
-in
 {
   options = {
     tuigreet = {
@@ -18,7 +15,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.tuigreet.enable {
     services.greetd = {
       enable = true;
       useTextGreeter = true;
@@ -27,7 +24,7 @@ in
           command = builtins.toString (
             pkgs.writeShellScript "tuigreet-session" ''
               ${pkgs.util-linux}/bin/setterm --blank 1 --powersave powerdown --powerdown 1
-              exec ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${cfg.command}
+              exec ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${config.tuigreet.command}
             ''
           );
           user = "greeter";
