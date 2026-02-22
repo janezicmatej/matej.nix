@@ -111,7 +111,10 @@
         formatter = pkgs.nixfmt-tree;
 
         devShells.default = pkgs.mkShell {
-          packages = [ pkgs.pre-commit ];
+          packages = [
+            pkgs.pre-commit
+            pkgs.statix
+          ];
         };
       }
     );
