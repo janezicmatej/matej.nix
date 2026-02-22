@@ -52,7 +52,15 @@
     let
       my-lib = import ./lib { lib = nixpkgs.lib; };
 
-      overlays = [ ];
+      overlays = [
+        (_: prev: {
+          claude-code =
+            (import inputs.nixpkgs-unstable {
+              system = prev.stdenv.hostPlatform.system;
+              config.allowUnfree = true;
+            }).claude-code;
+        })
+      ];
 
       mkHost = my-lib.mkHost {
         inherit
