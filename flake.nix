@@ -50,15 +50,19 @@
     }:
 
     let
-      my-lib = import ./lib { lib = nixpkgs.lib; };
+      my-lib = import ./lib { inherit (nixpkgs) lib; };
 
       overlays = [
         (_: prev: {
-          claude-code =
-            (import inputs.nixpkgs-unstable {
-              system = prev.stdenv.hostPlatform.system;
-              config.allowUnfree = true;
-            }).claude-code;
+          inherit
+            (
+              (import inputs.nixpkgs-unstable {
+                inherit (prev.stdenv.hostPlatform) system;
+                config.allowUnfree = true;
+              })
+            )
+            claude-code
+            ;
         })
       ];
 
@@ -94,7 +98,7 @@
 
       nixosModules = import ./modules/nixos {
         inherit my-lib;
-        lib = nixpkgs.lib;
+        inherit (nixpkgs) lib;
       } { };
     }
     // flake-utils.lib.eachDefaultSystem (
@@ -105,7 +109,7 @@
       {
         packages = import ./packages {
           inherit my-lib;
-          lib = nixpkgs.lib;
+          inherit (nixpkgs) lib;
         } (inputs // { inherit system; });
 
         formatter = pkgs.nixfmt-tree;

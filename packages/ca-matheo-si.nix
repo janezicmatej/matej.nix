@@ -7,7 +7,7 @@ in
 
 pkgs.stdenv.mkDerivation {
   pname = "ca-matheo-si";
-  version = version;
+  inherit version;
 
   src = pkgs.fetchurl {
     url = "http://ipa2.matheo.si/ipa/config/ca.crt";

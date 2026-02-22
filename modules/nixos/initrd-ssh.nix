@@ -78,7 +78,7 @@ in
           "${keyDir}/ssh_host_rsa_key"
           "${keyDir}/ssh_host_ed25519_key"
         ];
-        authorizedKeys = cfg.authorizedKeys;
+        inherit (cfg) authorizedKeys;
       };
       postCommands = ''
         echo 'cryptsetup-askpass' >> /root/.profile
