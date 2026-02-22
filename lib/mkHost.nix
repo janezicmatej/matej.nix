@@ -15,12 +15,10 @@ let
   hostHWConfig = ../hosts/${name}/hardware-configuration.nix;
   hasHWConfig = builtins.pathExists hostHWConfig;
 
-  # Load NixOS-level user config (account, groups, SSH keys)
   userNixosConfigs = map (user: ../users/${user}/nixos.nix) (
     builtins.filter (user: builtins.pathExists ../users/${user}/nixos.nix) users
   );
 
-  # Load home-manager user config
   userHMConfigs = nixpkgs.lib.genAttrs users (user: import ../users/${user}/home-manager.nix);
 
 in

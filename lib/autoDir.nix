@@ -1,6 +1,6 @@
 lib:
 
-# takes dir as an argument and creates an attribute set by importing all .nix files in that directory
+# import all .nix files in dir as attribute set
 dir:
 let
   readDir = builtins.readDir dir;

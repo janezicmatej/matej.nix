@@ -9,7 +9,7 @@ let
 
   cfg = config.initrd-ssh;
 
-  # Generate keys on new machines: ./scripts/initrd-ssh-keygen.sh
+  # generate host keys for new machines: ./scripts/initrd-ssh-keygen.sh
   keyDir = "/etc/secrets/initrd";
 
   mkIpString =
@@ -32,25 +32,21 @@ in
 
         address = lib.mkOption {
           type = lib.types.str;
-          description = "Static IP address";
           example = "10.222.0.247";
         };
 
         gateway = lib.mkOption {
           type = lib.types.str;
-          description = "Gateway address";
           example = "10.222.0.1";
         };
 
         netmask = lib.mkOption {
           type = lib.types.str;
           default = "255.255.255.0";
-          description = "Network mask";
         };
 
         interface = lib.mkOption {
           type = lib.types.str;
-          description = "Network interface";
           example = "enp5s0";
         };
       };
@@ -58,12 +54,10 @@ in
       authorizedKeys = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = keys.sshAuthorizedKeys;
-        description = "SSH public keys authorized for initrd unlock";
       };
 
       networkModule = lib.mkOption {
         type = lib.types.str;
-        description = "Kernel module for network interface (e.g., r8169, e1000e)";
         example = "r8169";
       };
     };

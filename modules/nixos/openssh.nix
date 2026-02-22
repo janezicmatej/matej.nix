@@ -10,7 +10,6 @@
       port = lib.mkOption {
         type = lib.types.port;
         default = 22;
-        description = "SSH server port";
       };
     };
   };

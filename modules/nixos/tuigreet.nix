@@ -14,7 +14,6 @@ in
 
       command = lib.mkOption {
         type = lib.types.str;
-        description = "Session command to launch";
       };
     };
   };

@@ -27,7 +27,6 @@ in
     inputs.self.nixosModules.initrd-ssh
   ];
 
-  # Modules
   yubikey.enable = true;
   openssh.enable = true;
   desktop.enable = true;
@@ -58,7 +57,6 @@ in
     };
   };
 
-  # Stylix theming
   stylix = {
     enable = true;
     polarity = "dark";
@@ -66,28 +64,22 @@ in
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
   };
 
-  # Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Locale
   time.timeZone = "Europe/Ljubljana";
   environment.variables.TZ = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # nix-ld for pip-installed binaries
-  # WARN:(matej) probably want to drop this in the future
+  # WARN:(@janezicmatej) nix-ld for running pip-installed binaries outside nix, probably want to drop this
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = options.programs.nix-ld.libraries.default;
 
-  # Security
   security.pki.certificateFiles = [ packages.ca-matheo-si ];
   services.gnome.gnome-keyring.enable = true;
 
-  # Services
   services.teamviewer.enable = true;
 
-  # Programs
   programs.thunderbird.enable = true;
   programs._1password.enable = true;
   programs._1password-gui.enable = true;
@@ -99,12 +91,10 @@ in
     localNetworkGameTransfers.openFirewall = true;
   };
 
-  # Hardware
   hardware.keyboard.zsa.enable = true;
   hardware.ledger.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
-  # Networking
   networking = {
     hostName = "matej-nixos";
     useDHCP = false;
@@ -123,7 +113,6 @@ in
     ];
   };
 
-  # XDG
   xdg.mime.defaultApplications = {
     "application/pdf" = "org.pwmt.zathura.desktop";
   };

@@ -13,7 +13,7 @@ in
 {
   home.stateVersion = "24.11";
 
-  # TODO:(janezicmatej) do i need this here?
+  # TODO:(@janezicmatej) do i need this here?
   services.dunst.enable = true;
 
   home.packages = [
@@ -99,7 +99,6 @@ in
       luajit
       nodejs_22 # copilot
 
-      # treesitter
       tree-sitter
 
       # lua_fzf
@@ -109,7 +108,6 @@ in
       gnumake
       delta
 
-      # language server
       pyright
       typescript-language-server
       lua-language-server
@@ -117,7 +115,6 @@ in
       nil
       nixd
 
-      # formatters
       nixpkgs-fmt
       stylua
     ];

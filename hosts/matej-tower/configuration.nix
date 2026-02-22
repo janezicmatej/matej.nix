@@ -25,7 +25,6 @@
     inputs.self.nixosModules.initrd-ssh
   ];
 
-  # Modules
   yubikey.enable = true;
   openssh.enable = true;
   desktop.enable = true;
@@ -44,7 +43,6 @@
     networkModule = "r8169";
   };
 
-  # Stylix theming
   stylix = {
     enable = true;
     polarity = "dark";
@@ -52,7 +50,7 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
   };
 
-  # Boot - Lanzaboote secure boot
+  # lanzaboote secure boot
   boot.kernelParams = [ "btusb.reset=1" ];
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.enable = lib.mkForce false;
@@ -61,18 +59,15 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
-  # Locale
   time.timeZone = "Europe/Ljubljana";
   environment.variables.TZ = "Europe/Ljubljana";
 
-  # Services
   services.udisks2.enable = true;
 
-  # Programs
   programs._1password.enable = true;
   programs._1password-gui.enable = true;
 
-  # Higher sample rate pipewire for audio equipment
+  # higher sample rate for audio equipment
   services.pipewire.extraConfig.pipewire.adjust-sample-rate = {
     "context.properties" = {
       "default.clock.rate" = 192000;
@@ -80,12 +75,10 @@
     };
   };
 
-  # System packages
   environment.systemPackages = with pkgs; [
     easyeffects
   ];
 
-  # XDG
   xdg.mime.defaultApplications = {
     "application/pdf" = "org.pwmt.zathura.desktop";
   };

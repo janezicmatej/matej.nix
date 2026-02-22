@@ -12,26 +12,20 @@
   };
 
   config = lib.mkIf config.desktop.enable {
-    # Audio
     services.pipewire = {
       enable = true;
       pulse.enable = true;
     };
 
-    # Bluetooth
     hardware.bluetooth.enable = true;
     services.blueman.enable = true;
 
-    # Security
     security.polkit.enable = true;
 
-    # D-Bus
     services.dbus.enable = true;
 
-    # Player control
     services.playerctld.enable = true;
 
-    # XDG Portals
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
@@ -41,7 +35,6 @@
       ];
     };
 
-    # Fonts
     fonts.packages = with pkgs; [
       font-awesome
       nerd-fonts.jetbrains-mono

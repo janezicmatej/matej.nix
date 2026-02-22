@@ -16,7 +16,7 @@ python.pkgs.buildPythonPackage rec {
     sha256 = "sha256-ScBG8BoOKDdOAHTFP+zwyk+Kfu31WoKQSRkutOvnJ5E";
   };
 
-  format = "wheel"; # if it uses poetry/PEP517, otherwise "setuptools"
+  format = "wheel";
   # nativeBuildInputs = [ python.pkgs.setuptools python.pkgs.wheel ];
   # propagatedBuildInputs = with python.pkgs; [
   #   # add runtime deps here if needed
