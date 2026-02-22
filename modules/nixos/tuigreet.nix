@@ -21,12 +21,10 @@
       useTextGreeter = true;
       settings = {
         default_session = {
-          command = builtins.toString (
-            pkgs.writeShellScript "tuigreet-session" ''
-              ${pkgs.util-linux}/bin/setterm --blank 1 --powersave powerdown --powerdown 1
-              exec ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${config.tuigreet.command}
-            ''
-          );
+          command = pkgs.writeShellScript "tuigreet-session" ''
+            ${pkgs.util-linux}/bin/setterm --blank 1 --powersave powerdown --powerdown 1
+            exec ${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${config.tuigreet.command}
+          '';
           user = "greeter";
         };
       };
