@@ -23,6 +23,7 @@
     inputs.self.nixosModules.tuigreet
     inputs.self.nixosModules.workstation
     inputs.self.nixosModules.initrd-ssh
+    inputs.self.nixosModules.localisation
   ];
 
   yubikey.enable = true;
@@ -59,8 +60,11 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
-  time.timeZone = "Europe/Ljubljana";
-  environment.variables.TZ = "Europe/Ljubljana";
+  localisation = {
+    enable = true;
+    timeZone = "Europe/Ljubljana";
+    defaultLocale = "en_US.UTF-8";
+  };
 
   services.udisks2.enable = true;
 

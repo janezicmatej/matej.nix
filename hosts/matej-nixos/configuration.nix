@@ -25,6 +25,7 @@ in
     inputs.self.nixosModules.workstation
     inputs.self.nixosModules.nvidia
     inputs.self.nixosModules.initrd-ssh
+    inputs.self.nixosModules.localisation
   ];
 
   yubikey.enable = true;
@@ -67,9 +68,11 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  time.timeZone = "Europe/Ljubljana";
-  environment.variables.TZ = "America/New_York";
-  i18n.defaultLocale = "en_US.UTF-8";
+  localisation = {
+    enable = true;
+    timeZone = "Europe/Ljubljana";
+    defaultLocale = "en_US.UTF-8";
+  };
 
   # WARN:(@janezicmatej) nix-ld for running pip-installed binaries outside nix, probably want to drop this
   programs.nix-ld.enable = true;
