@@ -21,7 +21,7 @@ in
 
     pkgs.starship
 
-    pkgs.claude-code
+    inputs.claude-code-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # git and co
     pkgs.git
