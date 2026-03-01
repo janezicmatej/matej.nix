@@ -22,6 +22,7 @@ in
     pkgs.starship
 
     inputs.claude-code-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
+    packages.todo-mcp
 
     # git and co
     pkgs.git
