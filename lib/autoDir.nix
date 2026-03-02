@@ -1,15 +1,10 @@
 lib:
 
-# import all .nix files in dir as attribute set
+# import package.nix from each subdirectory in dir as attribute set
 dir:
 let
   readDir = builtins.readDir dir;
-  files = lib.attrNames (
-    lib.filterAttrs (
-      name: type: type == "regular" && lib.hasSuffix ".nix" name && name != "default.nix"
-    ) readDir
-  );
-
-  packages = builtins.map (name: lib.removeSuffix ".nix" name) files;
+  dirs = lib.attrNames (lib.filterAttrs (_: type: type == "directory") readDir);
+  packages = lib.filter (name: builtins.pathExists (dir + "/${name}/package.nix")) dirs;
 in
-lib.genAttrs packages (name: import (dir + "/${name}.nix"))
+lib.genAttrs packages (name: import (dir + "/${name}/package.nix"))
