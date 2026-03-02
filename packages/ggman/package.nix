@@ -2,7 +2,7 @@
 
 let
   pkgs = pkgs-master;
-  version = "e24855c";
+  version = "v1.27.1";
 in
 pkgs.buildGoModule.override
   {
@@ -16,10 +16,10 @@ pkgs.buildGoModule.override
       owner = "tkw1536";
       repo = "ggman";
       rev = version;
-      sha256 = "sha256-H78xtF7l5joX3/qDFaRIT4LyZpHmm6DMR4JIKzNO7c0=";
+      sha256 = "sha256-z7zqV69rPYwtkm4ieF+FIssBsFbREvaYQzSF648DHK0=";
     };
 
-    vendorHash = "sha256-w8NrOt0xtn+/gugJ4amzdJP70Y5KHe5DlhsEprycm3U=";
+    vendorHash = "sha256-5c5EgYjZXfexWMrUDS4fo46GCJBmFuWkw0cVqqGT7Ik=";
     subPackages = [ "cmd/ggman" ];
 
     ldflags = [
