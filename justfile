@@ -25,6 +25,10 @@ update-package pkg:
 update-package-all:
     @for script in packages/*/update.sh; do bash "$script"; done
 
+# build all packages and hosts
+build:
+    nix flake check
+
 # build installation iso
 iso:
     nixos-rebuild build-image --image-variant iso-installer --flake .#live-iso
