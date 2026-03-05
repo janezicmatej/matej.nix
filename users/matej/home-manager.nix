@@ -8,9 +8,16 @@
 
 let
   packages = inputs.self.outputs.packages.${pkgs.stdenv.hostPlatform.system};
+  hmModules = inputs.self.outputs.homeManagerModules;
 in
 
 {
+  imports = [ hmModules.claude ];
+  claude = {
+    enable = true;
+    package = inputs.claude-code-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  };
+
   home.stateVersion = "24.11";
 
   # TODO:(@janezicmatej) do i need this here?
@@ -20,9 +27,6 @@ in
     pkgs.bibata-cursors
 
     pkgs.starship
-
-    inputs.claude-code-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
-    packages.todo-mcp
 
     # git and co
     pkgs.git

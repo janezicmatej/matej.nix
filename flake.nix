@@ -51,19 +51,7 @@
     let
       my-lib = import ./lib { inherit (nixpkgs) lib; };
 
-      overlays = [
-        (_: prev: {
-          inherit
-            (
-              (import inputs.nixpkgs-unstable {
-                inherit (prev.stdenv.hostPlatform) system;
-                config.allowUnfree = true;
-              })
-            )
-            claude-code
-            ;
-        })
-      ];
+      overlays = [ ];
 
       mkHost = my-lib.mkHost {
         inherit
@@ -96,6 +84,11 @@
       };
 
       nixosModules = import ./modules/nixos {
+        inherit my-lib;
+        inherit (nixpkgs) lib;
+      } { };
+
+      homeManagerModules = import ./modules/home-manager {
         inherit my-lib;
         inherit (nixpkgs) lib;
       } { };
