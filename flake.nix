@@ -15,6 +15,8 @@
     #   flake = false;
     # };
 
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
     flake-utils.url = "github:numtide/flake-utils";
 
     home-manager = {

@@ -13,6 +13,7 @@ in
 
 {
   imports = [
+    inputs.nixos-hardware.nixosModules.framework-16-amd-ai-300-series
     inputs.stylix.nixosModules.stylix
     inputs.self.nixosModules.yubikey
     inputs.self.nixosModules.sway
@@ -23,8 +24,6 @@ in
     inputs.self.nixosModules.gnupg
     inputs.self.nixosModules.tuigreet
     inputs.self.nixosModules.workstation
-    inputs.self.nixosModules.nvidia
-    inputs.self.nixosModules.initrd-ssh
     inputs.self.nixosModules.localisation
   ];
 
@@ -40,23 +39,7 @@ in
     command = "sway";
   };
 
-  sway = {
-    enable = true;
-    cmdFlags = [ "--unsupported-gpu" ];
-  };
-
-  nvidia.enable = true;
-
-  initrd-ssh = {
-    enable = true;
-    networkModule = "r8169";
-    ip = {
-      enable = true;
-      address = "10.222.0.247";
-      gateway = "10.222.0.1";
-      interface = "enp5s0";
-    };
-  };
+  sway.enable = true;
 
   stylix = {
     enable = true;
@@ -94,22 +77,18 @@ in
     localNetworkGameTransfers.openFirewall = true;
   };
 
+  services.hardware.bolt.enable = true;
   hardware.keyboard.zsa.enable = true;
   hardware.ledger.enable = true;
   hardware.bluetooth.powerOnBoot = true;
+  hardware.inputmodule.enable = true;
+
+  programs.nm-applet.enable = true;
 
   networking = {
     hostName = "matej-nixos";
-    useDHCP = false;
     networkmanager.enable = true;
-    interfaces.enp5s0.ipv4.addresses = [
-      {
-        address = "10.222.0.247";
-        prefixLength = 24;
-      }
-    ];
     firewall.enable = false;
-    defaultGateway = "10.222.0.1";
     nameservers = [
       "1.1.1.1"
       "8.8.8.8"

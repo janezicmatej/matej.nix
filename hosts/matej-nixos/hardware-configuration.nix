@@ -17,8 +17,10 @@
   boot.initrd.availableKernelModules = [
     "nvme"
     "xhci_pci"
-    "ahci"
+    "thunderbolt"
     "usbhid"
+    "uas"
+    "sd_mod"
   ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-amd" ];
@@ -33,7 +35,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/7151-CE52";
+    device = "/dev/disk/by-uuid/42D9-FAFD";
     fsType = "vfat";
     options = [
       "fmask=0022"
