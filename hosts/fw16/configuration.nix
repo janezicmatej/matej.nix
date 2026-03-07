@@ -32,6 +32,9 @@ in
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
   };
 
+  # neovim manages its own theme
+  home-manager.users.matej.stylix.targets.neovim.enable = false;
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 

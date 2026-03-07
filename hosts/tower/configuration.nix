@@ -34,6 +34,9 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
   };
 
+  # neovim manages its own theme
+  home-manager.users.matej.stylix.targets.neovim.enable = false;
+
   # lanzaboote secure boot
   boot.kernelParams = [ "btusb.reset=1" ];
   boot.loader.efi.canTouchEfiVariables = true;
