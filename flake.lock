@@ -468,6 +468,22 @@
         "type": "github"
       }
     },
+    "nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771940146,
+        "narHash": "sha256-z52fdPOWd3hUKKd9IojZ6rFYAgQrdrw/lNKFVdO2jf8=",
+        "ref": "refs/heads/main",
+        "rev": "058c9c730d8d60f482d97b61702561e1ea978847",
+        "revCount": 91,
+        "type": "git",
+        "url": "https://git.janezic.dev/janezicmatej/nvim.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.janezic.dev/janezicmatej/nvim.git"
+      }
+    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -503,6 +519,7 @@
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nvim": "nvim",
         "stylix": "stylix"
       }
     },

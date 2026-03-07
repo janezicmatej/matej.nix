@@ -10,10 +10,10 @@
     #   url = "git+https://git.janezic.dev/janezicmatej/.dotfiles.git";
     #   flake = false;
     # };
-    # nvim = {
-    #   url = "git+https://git.janezic.dev/janezicmatej/nvim.git?ref=rewrite";
-    #   flake = false;
-    # };
+    nvim = {
+      url = "git+https://git.janezic.dev/janezicmatej/nvim.git";
+      flake = false;
+    };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
@@ -82,6 +82,11 @@
         iso = mkHost "iso" {
           system = "x86_64-linux";
         };
+
+        ephvm = mkHost "ephvm" {
+          system = "x86_64-linux";
+          user = "matej";
+        };
       };
 
       nixosModules = import ./modules/nixos {
@@ -123,6 +128,7 @@
           packages = [
             pkgs.pre-commit
             pkgs.statix
+            pkgs.qemu
           ];
         };
       }
