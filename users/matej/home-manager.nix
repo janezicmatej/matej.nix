@@ -8,11 +8,9 @@
 
 let
   packages = inputs.self.outputs.packages.${pkgs.stdenv.hostPlatform.system};
-  hmModules = inputs.self.outputs.homeManagerModules;
 in
 
 {
-  imports = [ hmModules.claude ];
   claude = {
     enable = true;
     package = inputs.claude-code-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
