@@ -3,8 +3,8 @@ default:
     @just --list
 
 # rebuild and switch
-switch:
-    nixos-rebuild switch --flake . --sudo
+switch config="":
+    nixos-rebuild switch --flake .{{ if config != "" { "#" + config } else { "" } }} --sudo
 
 # fetch flake inputs
 sync:
