@@ -69,7 +69,7 @@
       lib = my-lib;
 
       nixosConfigurations = {
-        matej-nixos = mkHost "matej-nixos" {
+        fw16 = mkHost "fw16" {
           system = "x86_64-linux";
           user = "matej";
         };
