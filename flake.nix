@@ -73,7 +73,7 @@
           system = "x86_64-linux";
           user = "matej";
         };
-        matej-tower = mkHost "matej-tower" {
+        tower = mkHost "tower" {
           system = "x86_64-linux";
           user = "matej";
         };
