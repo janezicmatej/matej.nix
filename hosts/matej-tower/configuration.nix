@@ -4,44 +4,27 @@
   pkgs,
   inputs,
   options,
+  userKeys,
   ...
 }:
 
 {
-  networking.hostName = "matej-tower";
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.lanzaboote.nixosModules.lanzaboote
-
-    inputs.self.nixosModules.yubikey
-    inputs.self.nixosModules.sway
-    inputs.self.nixosModules.openssh
-    inputs.self.nixosModules.desktop
-    inputs.self.nixosModules.printing
-    inputs.self.nixosModules.zsh
-    inputs.self.nixosModules.gnupg
-    inputs.self.nixosModules.tuigreet
-    inputs.self.nixosModules.workstation
-    inputs.self.nixosModules.initrd-ssh
-    inputs.self.nixosModules.localisation
   ];
 
-  yubikey.enable = true;
-  openssh.enable = true;
-  desktop.enable = true;
-  printing.enable = true;
-  zsh.enable = true;
-  gnupg.enable = true;
-  workstation.enable = true;
-  tuigreet = {
-    enable = true;
-    command = "sway";
-  };
-  sway.enable = true;
+  profiles.desktop.enable = true;
 
   initrd-ssh = {
     enable = true;
     networkModule = "r8169";
+    authorizedKeys = userKeys.sshAuthorizedKeys;
+  };
+
+  localisation = {
+    timeZone = "Europe/Ljubljana";
+    defaultLocale = "en_US.UTF-8";
   };
 
   stylix = {
@@ -60,12 +43,6 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
-  localisation = {
-    enable = true;
-    timeZone = "Europe/Ljubljana";
-    defaultLocale = "en_US.UTF-8";
-  };
-
   services.udisks2.enable = true;
 
   programs._1password.enable = true;
@@ -82,6 +59,8 @@
   environment.systemPackages = with pkgs; [
     easyeffects
   ];
+
+  networking.hostName = "matej-tower";
 
   xdg.mime.defaultApplications = {
     "application/pdf" = "org.pwmt.zathura.desktop";

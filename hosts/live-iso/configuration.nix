@@ -2,16 +2,10 @@
   pkgs,
   lib,
   inputs,
+  userKeys,
   ...
 }:
-let
-  keys = import ../../users/matej/keys.nix;
-in
 {
-  imports = [
-    inputs.self.nixosModules.openssh
-  ];
-
   openssh.enable = true;
 
   image.modules.iso-installer = {
@@ -41,7 +35,7 @@ in
         "wheel"
         "users"
       ];
-      openssh.authorizedKeys.keys = keys.sshAuthorizedKeys;
+      openssh.authorizedKeys.keys = userKeys.sshAuthorizedKeys or [ ];
     };
   };
 

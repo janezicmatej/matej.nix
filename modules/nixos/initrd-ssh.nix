@@ -4,9 +4,6 @@
   ...
 }:
 let
-  # TODO:(@janezicmatej) restructure keys import
-  keys = import ../../users/matej/keys.nix;
-
   # generate host keys for new machines: ./scripts/initrd-ssh-keygen.sh
   keyDir = "/etc/secrets/initrd";
 
@@ -51,7 +48,7 @@ in
 
       authorizedKeys = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = keys.sshAuthorizedKeys;
+        default = [ ];
       };
 
       networkModule = lib.mkOption {

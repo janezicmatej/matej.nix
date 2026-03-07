@@ -4,6 +4,7 @@
   pkgs,
   inputs,
   options,
+  userKeys,
   ...
 }:
 
@@ -15,31 +16,14 @@ in
   imports = [
     inputs.nixos-hardware.nixosModules.framework-16-amd-ai-300-series
     inputs.stylix.nixosModules.stylix
-    inputs.self.nixosModules.yubikey
-    inputs.self.nixosModules.sway
-    inputs.self.nixosModules.openssh
-    inputs.self.nixosModules.desktop
-    inputs.self.nixosModules.printing
-    inputs.self.nixosModules.zsh
-    inputs.self.nixosModules.gnupg
-    inputs.self.nixosModules.tuigreet
-    inputs.self.nixosModules.workstation
-    inputs.self.nixosModules.localisation
   ];
 
-  yubikey.enable = true;
-  openssh.enable = true;
-  desktop.enable = true;
-  printing.enable = true;
-  zsh.enable = true;
-  gnupg.enable = true;
-  workstation.enable = true;
-  tuigreet = {
-    enable = true;
-    command = "sway";
-  };
+  profiles.desktop.enable = true;
 
-  sway.enable = true;
+  localisation = {
+    timeZone = "Europe/Ljubljana";
+    defaultLocale = "en_US.UTF-8";
+  };
 
   stylix = {
     enable = true;
@@ -50,12 +34,6 @@ in
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  localisation = {
-    enable = true;
-    timeZone = "Europe/Ljubljana";
-    defaultLocale = "en_US.UTF-8";
-  };
 
   # WARN:(@janezicmatej) nix-ld for running pip-installed binaries outside nix, probably want to drop this
   programs.nix-ld.enable = true;

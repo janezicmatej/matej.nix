@@ -71,17 +71,16 @@
       nixosConfigurations = {
         matej-nixos = mkHost "matej-nixos" {
           system = "x86_64-linux";
-          users = [ "matej" ];
+          user = "matej";
         };
         matej-tower = mkHost "matej-tower" {
           system = "x86_64-linux";
-          users = [ "matej" ];
+          user = "matej";
         };
 
         # nixos-rebuild build-image --image-variant install-iso --flake .#live-iso
         live-iso = mkHost "live-iso" {
           system = "x86_64-linux";
-          users = [ ];
         };
       };
 
