@@ -69,17 +69,17 @@
       lib = my-lib;
 
       nixosConfigurations = {
-        matej-nixos = mkHost "matej-nixos" {
+        fw16 = mkHost "fw16" {
           system = "x86_64-linux";
           user = "matej";
         };
-        matej-tower = mkHost "matej-tower" {
+        tower = mkHost "tower" {
           system = "x86_64-linux";
           user = "matej";
         };
 
-        # nixos-rebuild build-image --image-variant install-iso --flake .#live-iso
-        live-iso = mkHost "live-iso" {
+        # nixos-rebuild build-image --image-variant install-iso --flake .#iso
+        iso = mkHost "iso" {
           system = "x86_64-linux";
         };
       };

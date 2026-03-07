@@ -60,7 +60,7 @@
     easyeffects
   ];
 
-  networking.hostName = "matej-tower";
+  networking.hostName = "tower";
 
   xdg.mime.defaultApplications = {
     "application/pdf" = "org.pwmt.zathura.desktop";

@@ -64,7 +64,7 @@ in
   programs.nm-applet.enable = true;
 
   networking = {
-    hostName = "matej-nixos";
+    hostName = "fw16";
     networkmanager.enable = true;
     firewall.enable = false;
     nameservers = [
