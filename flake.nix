@@ -94,6 +94,11 @@
         inherit my-lib;
         inherit (nixpkgs) lib;
       } { };
+
+      nixosProfiles = import ./profiles {
+        inherit my-lib;
+        inherit (nixpkgs) lib;
+      } { };
     }
     // flake-utils.lib.eachDefaultSystem (
       system:
