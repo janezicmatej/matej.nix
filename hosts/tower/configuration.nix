@@ -46,6 +46,8 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   services.udisks2.enable = true;
 
   programs._1password.enable = true;
