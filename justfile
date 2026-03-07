@@ -31,7 +31,7 @@ build:
 
 # build installation iso
 iso:
-    nixos-rebuild build-image --image-variant iso-installer --flake .#live-iso
+    nixos-rebuild build-image --image-variant iso-installer --flake .#iso
 
 # garbage collect old generations
 clean:
