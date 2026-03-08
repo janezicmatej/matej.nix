@@ -10,6 +10,29 @@
 
   profiles.base.enable = true;
 
+  # no hardware firmware needed in a VM
+  hardware.enableRedistributableFirmware = lib.mkForce false;
+  hardware.wirelessRegulatoryDatabase = lib.mkForce false;
+
+  documentation.enable = false;
+  environment.defaultPackages = [ ];
+
+  # compressed qcow2, no channel copy
+  image.modules.qemu =
+    { config, modulesPath, ... }:
+    {
+      system.build.image = lib.mkForce (
+        import (modulesPath + "/../lib/make-disk-image.nix") {
+          inherit lib config pkgs;
+          inherit (config.virtualisation) diskSize;
+          inherit (config.image) baseName;
+          format = "qcow2-compressed";
+          copyChannel = false;
+          partitionTableType = "legacy";
+        }
+      );
+    };
+
   vm-guest = {
     enable = true;
     headless = true;
