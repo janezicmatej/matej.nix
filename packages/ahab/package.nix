@@ -19,6 +19,20 @@ pkgs.rustPlatform.buildRustPackage {
 
   buildType = "debug";
 
+  nativeBuildInputs = [ pkgs.installShellFiles ];
+
+  preBuild = ''
+    mkdir -p completions
+  '';
+
+  SHELL_COMPLETIONS_DIR = "completions";
+
+  postInstall = ''
+    installShellCompletion --bash completions/ahab.bash
+    installShellCompletion --zsh completions/_ahab
+    installShellCompletion --fish completions/ahab.fish
+  '';
+
   meta = {
     description = "ahab";
     homepage = "https://git.janezic.dev/janezicmatej/ahab";
