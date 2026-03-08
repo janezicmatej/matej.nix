@@ -40,7 +40,7 @@
     };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    claude-code-overlay.url = "github:ryoppippi/claude-code-overlay";
+
   };
 
   outputs =
@@ -53,7 +53,19 @@
     let
       my-lib = import ./lib { inherit (nixpkgs) lib; };
 
-      overlays = [ ];
+      overlays = [
+        (_: prev: {
+          inherit
+            (
+              (import inputs.nixpkgs-master {
+                inherit (prev.stdenv.hostPlatform) system;
+                inherit (prev) config;
+              })
+            )
+            claude-code
+            ;
+        })
+      ];
 
       mkHost = my-lib.mkHost {
         inherit
