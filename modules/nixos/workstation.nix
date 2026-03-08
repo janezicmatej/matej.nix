@@ -12,6 +12,8 @@
   };
 
   config = lib.mkIf config.workstation.enable {
+    programs.nix-ld.enable = true;
+
     virtualisation.docker = {
       enable = true;
       logDriver = "json-file";
