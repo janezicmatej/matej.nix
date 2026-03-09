@@ -27,6 +27,10 @@
       cider-2
       protonmail-bridge
       ledger-live-desktop
+      mpv
+      ffmpeg
+      wf-recorder
+      wl-mirror
     ];
 
     services.dunst.enable = true;
