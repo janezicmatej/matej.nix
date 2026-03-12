@@ -12,10 +12,7 @@
     profiles.base.enable = lib.mkDefault true;
     desktop.enable = lib.mkDefault true;
     sway.enable = lib.mkDefault true;
-    tuigreet = {
-      enable = lib.mkDefault true;
-      command = lib.mkDefault "sway";
-    };
+    greeter.enable = lib.mkDefault true;
     printing.enable = lib.mkDefault true;
     workstation.enable = lib.mkDefault true;
     yubikey.enable = lib.mkDefault true;
