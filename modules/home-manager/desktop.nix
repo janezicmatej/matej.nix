@@ -33,8 +33,6 @@
       wl-mirror
     ];
 
-    services.dunst.enable = true;
-
     home.file.".assets".source = inputs.assets;
   };
 }

@@ -34,18 +34,22 @@
       grim
       pulseaudio
       swayidle
-      # use swaylock-effects instead of swaylock
       swaylock-effects
-      wmenu
+      jq
       slurp
-      wofi
       wl-clipboard
       wob
       pamixer
       wlsunset
-      flameshot
+      satty
       waybar
       wayland-pipewire-idle-inhibit
+      swaynotificationcenter
+      fuzzel
+      cliphist
+      playerctl
+      eww
+      zenity
     ];
   };
 }
