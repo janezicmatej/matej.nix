@@ -29,6 +29,10 @@
     };
 
     environment.systemPackages = with pkgs; [
+      waybar
+      mako
+      wob
+      playerctl
       brightnessctl
       foot
       grim
@@ -38,17 +42,12 @@
       jq
       slurp
       wl-clipboard
-      wob
       pamixer
       wlsunset
       satty
-      waybar
       wayland-pipewire-idle-inhibit
-      swaynotificationcenter
       fuzzel
       cliphist
-      playerctl
-      eww
       zenity
     ];
   };
