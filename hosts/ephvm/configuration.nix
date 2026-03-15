@@ -58,8 +58,11 @@
     neovim.dotfiles = inputs.nvim;
   };
 
+  # ensure .config exists with correct ownership before automount
+  systemd.tmpfiles.rules = [ "d /home/matej/.config 0755 matej users -" ];
+
   # writable claude config via 9p
-  fileSystems."/home/matej/.claude" = {
+  fileSystems."/home/matej/.config/claude" = {
     device = "claude";
     fsType = "9p";
     options = [
@@ -70,23 +73,7 @@
     ];
   };
 
-  # .claude.json passed via qemu fw_cfg
-  boot.kernelModules = [ "qemu_fw_cfg" ];
-  systemd.services.claude-json = {
-    after = [ "systemd-modules-load.service" ];
-    wants = [ "systemd-modules-load.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "claude-json" ''
-        src="/sys/firmware/qemu_fw_cfg/by_name/opt/claude.json/raw"
-        [ -f "$src" ] || exit 0
-        cp "$src" /home/matej/.claude.json
-        chown matej:users /home/matej/.claude.json
-      '';
-    };
-  };
+  environment.sessionVariables.CLAUDE_CONFIG_DIR = "/home/matej/.config/claude";
 
   system.stateVersion = "25.11";
 }
