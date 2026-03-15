@@ -33,13 +33,9 @@ build:
 iso:
     nixos-rebuild build-image --image-variant iso-installer --flake .#iso
 
-# build ephemeral VM image
-ephvm-build:
-    nixos-rebuild build-image --image-variant qemu --flake .#ephvm
-
 # run ephemeral VM
-ephvm-run *ARGS:
-    bash scripts/ephvm-run.sh $(find -L result -name '*.qcow2' | head -1) {{ARGS}}
+ephvm *ARGS:
+    bash scripts/ephvm-run.sh {{ARGS}}
 
 # ssh into running ephemeral VM
 ephvm-ssh port="2222":
