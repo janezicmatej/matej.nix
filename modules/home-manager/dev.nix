@@ -27,6 +27,7 @@ in
       pkgs.google-cloud-sql-proxy
       packages.ahab
       pkgs.just
+      pkgs.presenterm
     ];
 
     programs.direnv = {
