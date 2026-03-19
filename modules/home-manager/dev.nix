@@ -28,6 +28,7 @@ in
       packages.ahab
       pkgs.just
       pkgs.presenterm
+      pkgs.osc
     ];
 
     programs.direnv = {
