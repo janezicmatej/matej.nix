@@ -19,7 +19,6 @@ in
   config = lib.mkIf config.claude.enable {
     home.packages = [
       config.claude.package
-      packages.todo-mcp
       pkgs.mcp-nixos
     ];
   };
