@@ -147,6 +147,8 @@
           packages = [
             pkgs.pre-commit
             pkgs.statix
+            pkgs.shellcheck
+            pkgs.shfmt
             pkgs.qemu
           ];
         };
