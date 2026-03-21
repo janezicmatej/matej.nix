@@ -26,6 +26,15 @@ pkgs.buildGoModule.override
       "-X go.tkw01536.de/ggman.buildVersion=${version}"
     ];
 
+    nativeBuildInputs = [ pkgs.installShellFiles ];
+
+    postInstall = ''
+      installShellCompletion --cmd ggman \
+        --bash <($out/bin/ggman completion bash) \
+        --zsh <($out/bin/ggman completion zsh) \
+        --fish <($out/bin/ggman completion fish)
+    '';
+
     meta = {
       description = "Manager for all your local git repositories";
       homepage = "https://github.com/tkw1536/ggman";
