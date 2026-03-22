@@ -16,5 +16,6 @@
     printing.enable = lib.mkDefault true;
     workstation.enable = lib.mkDefault true;
     yubikey.enable = lib.mkDefault true;
+    calibre.enable = lib.mkDefault true;
   };
 }
