@@ -8,23 +8,47 @@ name:
 {
   system,
   user ? null,
+  features ? [ ],
 }:
 
 let
-  hostConfig = ../hosts/${name}/configuration.nix;
-  hostHWConfig = ../hosts/${name}/hardware-configuration.nix;
-  hasHWConfig = builtins.pathExists hostHWConfig;
+  inherit (nixpkgs) lib;
   hasUser = user != null;
 
-  userKeys = if hasUser then import ../users/${user}/keys.nix else { };
+  # path helpers
+  featurePath = f: ../features/${f}.nix;
+  userFeaturePath = u: ../features/user-${u}.nix;
+  hostConfig = ../hosts/${name}/configuration.nix;
+  hostHWConfig = ../hosts/${name}/hardware-configuration.nix;
 
-  # auto-import all nixos modules and profiles
-  nixosModuleList = builtins.attrValues inputs.self.nixosModules;
-  nixosProfileList = builtins.attrValues inputs.self.nixosProfiles;
+  # load feature with path check
+  loadFeature =
+    f:
+    assert
+      builtins.pathExists (featurePath f)
+      || throw "feature '${f}' not found at ${toString (featurePath f)}";
+    import (featurePath f);
 
-  # auto-import all home-manager modules
-  hmModuleList = builtins.attrValues inputs.self.homeManagerModules;
+  loadedFeatures = map loadFeature features;
 
+  # load user feature with path check
+  userFeature =
+    if hasUser then
+      assert
+        builtins.pathExists (userFeaturePath user)
+        || throw "user feature 'user-${user}' not found at ${toString (userFeaturePath user)}";
+      import (userFeaturePath user)
+    else
+      null;
+
+  allFeatures = loadedFeatures ++ lib.optional (userFeature != null) userFeature;
+
+  # extract keys from user feature for specialArgs
+  userKeys = if userFeature != null then (userFeature.keys or { }) else { };
+
+  # collect nixos and home modules from all features
+  nixosMods = map (f: f.nixos) (builtins.filter (f: f ? nixos) allFeatures);
+  homeMods = map (f: f.home) (builtins.filter (f: f ? home) allFeatures);
 in
 nixpkgs.lib.nixosSystem {
   inherit system;
@@ -33,27 +57,23 @@ nixpkgs.lib.nixosSystem {
 
     { nixpkgs.overlays = overlays; }
     { nixpkgs.config.allowUnfree = true; }
+    { networking.hostName = name; }
 
     hostConfig
   ]
-  ++ nixpkgs.lib.optional hasHWConfig hostHWConfig
-  ++ nixosModuleList
-  ++ nixosProfileList
-  ++ nixpkgs.lib.optional (
-    hasUser && builtins.pathExists ../users/${user}/nixos.nix
-  ) ../users/${user}/nixos.nix
-  ++ [
+  ++ lib.optional (builtins.pathExists hostHWConfig) hostHWConfig
+  ++ nixosMods
+  ++ lib.optionals hasUser [
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
-      home-manager.users = nixpkgs.lib.mkIf hasUser {
-        ${user} = import ../users/${user}/home-manager.nix;
-      };
-      home-manager.sharedModules = hmModuleList;
+      home-manager.users.${user}.imports = homeMods;
       home-manager.extraSpecialArgs = { inherit inputs; };
     }
   ];
-  specialArgs = { inherit inputs userKeys; };
+  specialArgs = {
+    inherit inputs userKeys user;
+  };
 }

@@ -131,20 +131,6 @@
             };
           };
 
-          nixosModules = import ./modules/nixos {
-            inherit my-lib;
-            inherit (nixpkgs) lib;
-          } { };
-
-          homeManagerModules = import ./modules/home-manager {
-            inherit my-lib;
-            inherit (nixpkgs) lib;
-          } { };
-
-          nixosProfiles = import ./profiles {
-            inherit my-lib;
-            inherit (nixpkgs) lib;
-          } { };
         };
     };
 }
