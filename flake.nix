@@ -39,98 +39,34 @@
   };
 
   outputs =
-    inputs@{ flake-parts, nixpkgs, ... }:
+    inputs@{
+      flake-parts,
+      nixpkgs,
+      self,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        ./flake/overlays.nix
+        ./flake/packages.nix
+        ./flake/devshell.nix
+        ./flake/hosts.nix
+      ];
+
       systems = [ "x86_64-linux" ];
 
       perSystem =
-        { system, pkgs, ... }:
-        let
-          my-lib = import ./lib { inherit (nixpkgs) lib; };
-        in
+        { system, ... }:
         {
-          packages =
-            import ./packages
-              {
-                inherit my-lib;
-                inherit (nixpkgs) lib;
-              }
-              {
-                inherit pkgs;
-                pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-                pkgs-master = inputs.nixpkgs-master.legacyPackages.${system};
-              };
-
-          formatter = pkgs.nixfmt-tree;
-
-          devShells.default = pkgs.mkShell {
-            packages = [
-              pkgs.pre-commit
-              pkgs.statix
-              pkgs.shellcheck
-              pkgs.shfmt
-              pkgs.qemu
-            ];
+          _module.args.pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.default ];
+            config.allowUnfree = true;
           };
         };
 
-      flake =
-        let
-          my-lib = import ./lib { inherit (nixpkgs) lib; };
-
-          overlays = [
-            (
-              _: prev:
-              let
-                pkgs-unstable = import inputs.nixpkgs-unstable {
-                  inherit (prev.stdenv.hostPlatform) system;
-                  inherit (prev) config;
-                };
-                pkgs-master = import inputs.nixpkgs-master {
-                  inherit (prev.stdenv.hostPlatform) system;
-                  inherit (prev) config;
-                };
-              in
-              {
-                inherit (pkgs-master) claude-code;
-                # TODO:(@janezicmatej) 2026-03-09 error with stable for telegram-desktop
-                inherit (pkgs-unstable) telegram-desktop;
-              }
-            )
-          ];
-
-          mkHost = my-lib.mkHost {
-            inherit
-              nixpkgs
-              overlays
-              inputs
-              ;
-          };
-        in
-        {
-          lib = my-lib;
-
-          nixosConfigurations = {
-            fw16 = mkHost "fw16" {
-              system = "x86_64-linux";
-              user = "matej";
-            };
-            tower = mkHost "tower" {
-              system = "x86_64-linux";
-              user = "matej";
-            };
-
-            # nixos-rebuild build-image --image-variant install-iso --flake .#iso
-            iso = mkHost "iso" {
-              system = "x86_64-linux";
-            };
-
-            ephvm = mkHost "ephvm" {
-              system = "x86_64-linux";
-              user = "matej";
-            };
-          };
-
-        };
+      flake = {
+        lib = import ./lib { inherit (nixpkgs) lib; };
+      };
     };
 }

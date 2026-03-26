@@ -1,22 +1,11 @@
 {
-  pkgs,
-  lib,
-  inputs,
   userKeys,
   ...
 }:
 {
-  openssh.enable = true;
-
   image.modules.iso-installer = {
     isoImage.squashfsCompression = "zstd -Xcompression-level 6";
   };
-
-  fileSystems."/" = lib.mkDefault {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-  };
-  boot.loader.grub.device = lib.mkDefault "/dev/sda";
 
   networking.firewall.allowedTCPPorts = [ 22 ];
 
