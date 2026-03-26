@@ -2,14 +2,9 @@
   pkgs,
   lib,
   inputs,
-  config,
   ...
 }:
 {
-  networking.hostName = "ephvm";
-
-  profiles.base.enable = true;
-
   # no hardware firmware needed in a VM
   hardware.enableRedistributableFirmware = lib.mkForce false;
   hardware.wirelessRegulatoryDatabase = lib.mkForce false;
@@ -33,27 +28,15 @@
       );
     };
 
-  vm-guest = {
-    enable = true;
-    headless = true;
-  };
+  vm-guest.headless = true;
 
-  vm-9p-automount = {
-    enable = true;
-    user = "matej";
-  };
+  vm-9p-automount.user = "matej";
 
   localisation = {
     timeZone = "UTC";
     defaultLocale = "en_US.UTF-8";
   };
 
-  virtualisation.docker = {
-    enable = true;
-    logDriver = "json-file";
-  };
-
-  # TODO:(@janezicmatej) move neovim dotfiles wiring to a cleaner place
   home-manager.users.matej = {
     neovim.dotfiles = inputs.nvim;
   };
