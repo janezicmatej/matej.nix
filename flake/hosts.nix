@@ -84,6 +84,8 @@ in
         "vm-9p-automount"
         "docker"
         "neovim"
+        "claude"
+        "dev"
       ];
     };
   };
