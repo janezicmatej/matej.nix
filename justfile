@@ -41,6 +41,14 @@ ephvm *ARGS:
 ephvm-ssh port="2222":
     ssh -p {{port}} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null matej@localhost
 
+# provision a host with nixos-anywhere
+provision host ip:
+    nix run github:nix-community/nixos-anywhere -- --flake .#{{host}} --generate-hardware-config nixos-generate-config ./hosts/{{host}}/hardware-configuration.nix root@{{ip}}
+
+# deploy config to a remote host
+deploy host remote=host:
+    nixos-rebuild switch --flake .#{{host}} --target-host {{remote}} --sudo --ask-sudo-password
+
 # garbage collect old generations
 clean:
     sudo nix-collect-garbage $(nix eval --raw -f ./nix.nix nix.gc.options)
