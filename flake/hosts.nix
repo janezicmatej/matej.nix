@@ -67,6 +67,7 @@ in
     # nixos-rebuild build-image --image-variant install-iso --flake .#iso
     iso = mkHost "iso" {
       system = "x86_64-linux";
+      user = "matej";
       features = [
         "openssh"
       ];

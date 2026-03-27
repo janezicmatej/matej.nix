@@ -12,6 +12,8 @@ in
   nixos =
     { pkgs, ... }:
     {
+      programs.zsh.enable = true;
+
       users.users.matej = {
         uid = 1000;
         isNormalUser = true;

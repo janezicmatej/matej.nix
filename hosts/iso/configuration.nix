@@ -1,32 +1,11 @@
-{
-  userKeys,
-  ...
-}:
-{
+_: {
   image.modules.iso-installer = {
     isoImage.squashfsCompression = "zstd -Xcompression-level 6";
   };
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
-
-  users = {
-    groups.matej = {
-      gid = 1000;
-    };
-    users.matej = {
-      group = "matej";
-      uid = 1000;
-      isNormalUser = true;
-      home = "/home/matej";
-      createHome = true;
-      password = "burek123";
-      extraGroups = [
-        "wheel"
-        "users"
-      ];
-      openssh.authorizedKeys.keys = userKeys.sshAuthorizedKeys or [ ];
-    };
-  };
+  # live iso: passwordless login and sudo
+  users.users.matej.initialHashedPassword = "";
+  security.sudo.wheelNeedsPassword = false;
 
   system.stateVersion = "25.05";
 }
