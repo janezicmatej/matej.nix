@@ -73,6 +73,18 @@ in
       ];
     };
 
+    # nix run github:nix-community/nixos-anywhere -- --flake .#floo root@<ip>
+    floo = mkHost "floo" {
+      system = "x86_64-linux";
+      user = "matej";
+      features = [
+        "openssh"
+        "localisation"
+        "shell"
+        "tailscale"
+      ];
+    };
+
     ephvm = mkHost "ephvm" {
       system = "x86_64-linux";
       user = "matej";
