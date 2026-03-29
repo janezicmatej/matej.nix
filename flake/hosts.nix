@@ -73,6 +73,18 @@ in
       ];
     };
 
+    cube = mkHost "cube" {
+      system = "x86_64-linux";
+      user = "matej";
+      features = [
+        "openssh"
+        "localisation"
+        "shell"
+        "tailscale"
+        "remote-base"
+      ];
+    };
+
     # nix run github:nix-community/nixos-anywhere -- --flake .#floo root@<ip>
     floo = mkHost "floo" {
       system = "x86_64-linux";
