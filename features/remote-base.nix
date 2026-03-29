@@ -7,6 +7,7 @@
         neededForUsers = true;
       };
 
+      users.mutableUsers = false;
       users.users.${user}.hashedPasswordFile = config.sops.secrets.user-password.path;
     };
 }
