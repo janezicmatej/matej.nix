@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   inputs,
   userKeys,
@@ -9,6 +10,10 @@
   imports = [
     inputs.lanzaboote.nixosModules.lanzaboote
   ];
+
+  # nix store signing
+  sops.secrets.nix-signing-key.sopsFile = ../../secrets/tower.yaml;
+  nix.settings.secret-key-files = [ config.sops.secrets.nix-signing-key.path ];
 
   localisation = {
     timeZone = "Europe/Ljubljana";
