@@ -1,0 +1,30 @@
+keys:
+  - &matej AF349EECC849D87B790E88FF6318FFB7DB374B7D
+
+  # host age keys (via: ssh-keyscan <host> | ssh-to-age)
+  - &tower age1frwe9fpt9vh969aqnggvq8pfypp6hl98guwfmgttucp7gr55r42sqy2t65
+  - &fw16 age19qj2aaryx869cvcqp77gs9x5hcv4dqjxunkmyre78upsxda6ss7s5vquz4
+  - &floo age1hksdq2lc89thnpth49sw44f0pmkp950plrhhnttj4petvnfy04tsydz6fl
+
+creation_rules:
+  # per-host secrets
+  - path_regex: ^secrets/tower\.yaml$
+    key_groups:
+      - pgp: [*matej]
+        age: [*tower]
+
+  - path_regex: ^secrets/fw16\.yaml$
+    key_groups:
+      - pgp: [*matej]
+        age: [*fw16]
+
+  - path_regex: ^secrets/floo\.yaml$
+    key_groups:
+      - pgp: [*matej]
+        age: [*floo]
+
+  # shared secrets (all hosts)
+  - path_regex: ^secrets/common\.yaml$
+    key_groups:
+      - pgp: [*matej]
+        age: [*tower, *fw16, *floo]
