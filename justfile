@@ -43,7 +43,17 @@ ephvm-ssh port="2222":
 
 # provision a host with nixos-anywhere
 provision host ip:
-    nix run github:nix-community/nixos-anywhere -- --flake .#{{host}} --generate-hardware-config nixos-generate-config ./hosts/{{host}}/hardware-configuration.nix root@{{ip}}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    tmpdir=$(mktemp -d)
+    trap 'rm -rf "$tmpdir"' EXIT
+    install -d -m 755 "$tmpdir/etc/ssh"
+    ssh-keygen -t ed25519 -f "$tmpdir/etc/ssh/ssh_host_ed25519_key" -N ""
+    age_key=$(ssh-to-age < "$tmpdir/etc/ssh/ssh_host_ed25519_key.pub")
+    echo "age key: $age_key"
+    echo "add this key to .sops.yaml, re-encrypt secrets, then press enter to continue"
+    read -r
+    nix run github:nix-community/nixos-anywhere -- --flake .#{{host}} --extra-files "$tmpdir" --generate-hardware-config nixos-generate-config ./hosts/{{host}}/hardware-configuration.nix root@{{ip}}
 
 # deploy config to a remote host
 deploy host remote=host:
