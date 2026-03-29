@@ -5,6 +5,7 @@ keys:
   - &tower age1frwe9fpt9vh969aqnggvq8pfypp6hl98guwfmgttucp7gr55r42sqy2t65
   - &fw16 age19qj2aaryx869cvcqp77gs9x5hcv4dqjxunkmyre78upsxda6ss7s5vquz4
   - &floo age1hksdq2lc89thnpth49sw44f0pmkp950plrhhnttj4petvnfy04tsydz6fl
+  - &cube age15cktenavt5v7zm84se36jtly740syca5nw8em8edx404n5x2ddws8jn29g
 
 creation_rules:
   # per-host secrets
@@ -23,8 +24,13 @@ creation_rules:
       - pgp: [*matej]
         age: [*floo]
 
+  - path_regex: ^secrets/cube\.yaml$
+    key_groups:
+      - pgp: [*matej]
+        age: [*cube]
+
   # shared secrets (all hosts)
   - path_regex: ^secrets/common\.yaml$
     key_groups:
       - pgp: [*matej]
-        age: [*tower, *fw16, *floo]
+        age: [*tower, *fw16, *floo, *cube]
