@@ -82,6 +82,7 @@ in
         "localisation"
         "shell"
         "tailscale"
+        "remote-base"
       ];
     };
 
