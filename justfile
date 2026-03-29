@@ -53,7 +53,10 @@ provision host ip:
     echo "age key: $age_key"
     echo "add this key to .sops.yaml, re-encrypt secrets, then press enter to continue"
     read -r
-    nix run github:nix-community/nixos-anywhere -- --flake .#{{host}} --extra-files "$tmpdir" --generate-hardware-config nixos-generate-config ./hosts/{{host}}/hardware-configuration.nix root@{{ip}}
+    nix run github:nix-community/nixos-anywhere -- --no-reboot --flake .#{{host}} --extra-files "$tmpdir" --generate-hardware-config nixos-generate-config ./hosts/{{host}}/hardware-configuration.nix root@{{ip}}
+    echo "remove USB and press enter to reboot"
+    read -r
+    ssh root@{{ip}} reboot
 
 # deploy config to a remote host
 deploy host remote=host:
