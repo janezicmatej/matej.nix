@@ -54,6 +54,7 @@ nixpkgs.lib.nixosSystem {
   inherit system;
   modules = [
     ../nix.nix
+    inputs.sops-nix.nixosModules.sops
 
     { nixpkgs.overlays = overlays; }
     { nixpkgs.config.allowUnfree = true; }
