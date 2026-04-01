@@ -61,6 +61,7 @@ in
         "neovim"
         "dev"
         "claude"
+        "harmonia"
       ];
     };
 
