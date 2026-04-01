@@ -16,7 +16,13 @@ let
   hasUser = user != null;
 
   # path helpers
-  featurePath = f: ../features/${f}.nix;
+  featurePath =
+    f:
+    let
+      file = ../features/${f}.nix;
+      dir = ../features/${f};
+    in
+    if builtins.pathExists file then file else dir;
   userFeaturePath = u: ../features/user-${u}.nix;
   hostConfig = ../hosts/${name}/configuration.nix;
   hostHWConfig = ../hosts/${name}/hardware-configuration.nix;

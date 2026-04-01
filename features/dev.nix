@@ -9,7 +9,6 @@
         pkgs.git
         packages.git-linearize
         packages.ggman
-        pkgs.go
         pkgs.python3
         pkgs.mdbook
         pkgs.marksman
@@ -22,9 +21,5 @@
         pkgs.osc
       ];
 
-      programs.direnv = {
-        enable = true;
-        nix-direnv.enable = true;
-      };
     };
 }
