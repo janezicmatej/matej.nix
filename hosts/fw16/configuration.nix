@@ -30,9 +30,9 @@
     IdleActionSec = "15min";
   };
 
-  systemd.sleep.extraConfig = ''
-    HibernateDelaySec=30min
-  '';
+  systemd.sleep.settings.Sleep = {
+    HibernateDelaySec = "30min";
+  };
 
   programs.nix-ld.libraries = options.programs.nix-ld.libraries.default;
 

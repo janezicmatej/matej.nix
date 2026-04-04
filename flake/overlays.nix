@@ -4,7 +4,7 @@
   flake.overlays.default =
     _: prev:
     let
-      pkgs-unstable = import inputs.nixpkgs-unstable {
+      pkgs-stable = import inputs.nixpkgs-stable {
         inherit (prev.stdenv.hostPlatform) system;
         inherit (prev) config;
       };
@@ -15,7 +15,5 @@
     in
     {
       inherit (pkgs-master) claude-code;
-      # TODO:(@janezicmatej) 2026-03-09 error with stable for telegram-desktop
-      inherit (pkgs-unstable) telegram-desktop;
     };
 }

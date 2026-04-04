@@ -15,7 +15,6 @@ in
           }
           {
             inherit pkgs;
-            pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
             pkgs-master = inputs.nixpkgs-master.legacyPackages.${system};
           };
     };
