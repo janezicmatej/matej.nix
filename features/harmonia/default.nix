@@ -17,7 +17,7 @@
       flakeRef = inputs.self.outPath;
     in
     {
-      services.harmonia = {
+      services.harmonia.cache = {
         enable = true;
         signKeyPaths = [ config.sops.secrets.nix-signing-key.path ];
       };
