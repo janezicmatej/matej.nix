@@ -1,16 +1,28 @@
 # shellcheck shell=bash
 # composable nix devshell from matej.nix
-# usage in .envrc: use dev uv_14 pg_18
+# usage in .envrc: use dev uv_14 pg_18 --extra cairo pkg-config
 
 # generates a flake and delegates to use_flake at the calling scope
 use_dev() {
-	local nix_list=""
+	local nix_list="" extra_list="" in_extra=0
 	for c in "$@"; do
-		if [[ ! "$c" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
-			log_error "use_dev: invalid component name: $c"
-			return 1
+		if [[ "$c" == "--extra" ]]; then
+			in_extra=1
+			continue
 		fi
-		nix_list="$nix_list \"$c\""
+		if [[ $in_extra -eq 1 ]]; then
+			if [[ ! "$c" =~ ^[a-zA-Z_][a-zA-Z0-9_-]*$ ]]; then
+				log_error "use_dev: invalid package name: $c"
+				return 1
+			fi
+			extra_list="$extra_list pkgs.$c"
+		else
+			if [[ ! "$c" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
+				log_error "use_dev: invalid component name: $c"
+				return 1
+			fi
+			nix_list="$nix_list \"$c\""
+		fi
 	done
 
 	local system
@@ -64,7 +76,7 @@ use_dev() {
       pkgs = nixpkgs.legacyPackages.\${system};
       devLib = import "\${dev}/flake/dev-components.nix" { inherit pkgs; lib = nixpkgs.lib; };
     in {
-      devShells.\${system}.default = devLib.mkComponentShell [$nix_list ];
+      devShells.\${system}.default = devLib.mkComponentShell [$nix_list ] [${extra_list} ];
     };
 }
 DEVFLAKE

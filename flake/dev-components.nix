@@ -8,6 +8,7 @@ let
     pkgs.zlib
     pkgs.openssl
     pkgs.curl
+    pkgs.libffi
   ];
 
   mkNode = nodejs: {
@@ -24,12 +25,12 @@ let
     packages = [
       python
       pkgs.uv
+      pkgs.pkg-config
     ];
     libraries = pythonLibraries;
     env = {
       UV_PYTHON_DOWNLOADS = "never";
       UV_PYTHON_PREFERENCE = "only-system";
-      UV_PYTHON = "${python}/bin/python";
     };
     shellHook = ''
       unset PYTHONPATH
@@ -44,26 +45,9 @@ let
     uv_13 = mkUv pkgs.python313;
     uv_14 = mkUv pkgs.python314;
 
-    pg_15 = {
-      packages = [ pkgs.postgresql_15 ];
-    };
-    pg_16 = {
-      packages = [ pkgs.postgresql_16 ];
-    };
-    pg_17 = {
-      packages = [ pkgs.postgresql_17 ];
-    };
-    pg_18 = {
-      packages = [ pkgs.postgresql_18 ];
-    };
-
     node_20 = mkNode pkgs.nodejs_20;
     node_22 = mkNode pkgs.nodejs_22;
     node_24 = mkNode pkgs.nodejs_24;
-
-    go = {
-      packages = [ pkgs.go ];
-    };
 
     rust = {
       packages = [
@@ -75,20 +59,14 @@ let
       ];
     };
 
-    cmake = {
-      packages = [
-        pkgs.cmake
-        pkgs.ninja
-      ];
-    };
   };
 
   # build a single mkShell from one or more component names
   mkComponentShell =
-    names:
+    names: extraPackages:
     let
       selected = map (n: components.${n}) names;
-      allPackages = lib.concatMap (c: c.packages or [ ]) selected;
+      allPackages = lib.concatMap (c: c.packages or [ ]) selected ++ extraPackages;
       allLibraries = lib.concatMap (c: c.libraries or [ ]) selected;
       allHooks = lib.concatMapStrings (c: c.shellHook or "") selected;
       allEnvs = lib.foldl' (acc: c: acc // (c.env or { })) { } selected;

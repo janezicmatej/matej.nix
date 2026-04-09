@@ -9,16 +9,16 @@
         pkgs.git
         packages.git-linearize
         packages.ggman
+
         pkgs.python3
-        pkgs.mdbook
-        pkgs.marksman
-        pkgs.mdformat
+        pkgs.osc
+
         pkgs.google-cloud-sdk
         pkgs.google-cloud-sql-proxy
+
         packages.ahab
         pkgs.just
         pkgs.presenterm
-        pkgs.osc
       ];
 
     };
