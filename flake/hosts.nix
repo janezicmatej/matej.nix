@@ -96,6 +96,7 @@ in
         "shell"
         "tailscale"
         "remote-base"
+        "filedrop"
       ];
     };
 
