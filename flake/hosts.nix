@@ -100,6 +100,21 @@ in
       ];
     };
 
+    fortress = mkHost "fortress" {
+      system = "x86_64-linux";
+      user = "matej";
+      features = [
+        "localisation"
+        "gnupg"
+        "shell-minimal"
+        "desktop-minimal"
+        "sway"
+        "greeter"
+        "networkmanager"
+        "yubikey"
+      ];
+    };
+
     ephvm = mkHost "ephvm" {
       system = "x86_64-linux";
       user = "matej";
