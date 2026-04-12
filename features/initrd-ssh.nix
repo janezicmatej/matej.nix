@@ -59,6 +59,7 @@
 
         boot.initrd.network = {
           enable = true;
+          udhcpc.enable = !cfg.ip.enable;
           ssh = {
             enable = true;
             port = 22;
