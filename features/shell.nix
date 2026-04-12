@@ -1,25 +1,28 @@
 {
-  nixos = _: {
-    programs.zsh.enable = true;
-    environment.etc."zshenv".text = ''
-      export ZDOTDIR=$HOME/.config/zsh
-    '';
-  };
+  nixos =
+    { lib, ... }:
+    {
+      options.features.shell.enable = lib.mkEnableOption "shell extras";
+    };
 
   home =
-    { pkgs, ... }:
+    { pkgs, lib, osConfig, ... }:
+    let
+      cfg = osConfig.features.shell;
+    in
     {
-      home.packages = with pkgs; [
-        starship
-        fzf
-        htop
-        jc
-        jq
-        openssl
-        pv
-        ripgrep
-        fd
-        tmux
-      ];
+      config = lib.mkIf cfg.enable {
+        home.packages = with pkgs; [
+          fzf
+          htop
+          jc
+          jq
+          openssl
+          pv
+          ripgrep
+          fd
+          tmux
+        ];
+      };
     };
 }

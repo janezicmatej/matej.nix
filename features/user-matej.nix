@@ -10,15 +10,12 @@ in
   };
 
   nixos =
-    { pkgs, ... }:
+    { ... }:
     {
-      programs.zsh.enable = true;
-
       users.users.matej = {
         uid = 1000;
         isNormalUser = true;
         home = "/home/matej";
-        shell = pkgs.zsh;
         extraGroups = [ "wheel" ];
         openssh.authorizedKeys.keys = sshKeys;
       };

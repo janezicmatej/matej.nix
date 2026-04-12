@@ -1,25 +1,29 @@
 {
+  nixos =
+    { lib, ... }:
+    {
+      options.features.dev.enable = lib.mkEnableOption "development tools";
+    };
+
   home =
-    { pkgs, inputs, ... }:
+    { pkgs, lib, inputs, osConfig, ... }:
     let
+      cfg = osConfig.features.dev;
       packages = inputs.self.outputs.packages.${pkgs.stdenv.hostPlatform.system};
     in
     {
-      home.packages = [
-        pkgs.git
-        packages.git-linearize
-        packages.ggman
+      config = lib.mkIf cfg.enable {
+        home.packages = [
+          pkgs.python3
+          pkgs.osc
 
-        pkgs.python3
-        pkgs.osc
+          pkgs.google-cloud-sdk
+          pkgs.google-cloud-sql-proxy
 
-        pkgs.google-cloud-sdk
-        pkgs.google-cloud-sql-proxy
-
-        packages.ahab
-        pkgs.just
-        pkgs.presenterm
-      ];
-
+          packages.ahab
+          pkgs.just
+          pkgs.presenterm
+        ];
+      };
     };
 }
