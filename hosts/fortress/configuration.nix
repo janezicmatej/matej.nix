@@ -10,13 +10,11 @@
     inputs.nixos-hardware.nixosModules.framework-16-amd-ai-300-series
   ];
 
-  localisation = {
-    timeZone = "Europe/Ljubljana";
-    defaultLocale = "en_US.UTF-8";
+  features.desktop = {
+    apps.enable = false;
+    internalCA.enable = false;
   };
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  features.gnupg.yubikey.enable = true;
 
   disko.devices.disk.main = {
     type = "disk";

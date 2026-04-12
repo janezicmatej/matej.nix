@@ -1,8 +1,7 @@
 {
   lib,
-  pkgs,
-  inputs,
   options,
+  inputs,
   ...
 }:
 
@@ -11,28 +10,15 @@
     inputs.nixos-hardware.nixosModules.framework-16-amd-ai-300-series
   ];
 
-  localisation = {
-    timeZone = "Europe/Ljubljana";
-    defaultLocale = "en_US.UTF-8";
+  features.desktop.bluetooth.enable = true;
+  features.gnupg.yubikey.enable = true;
+  features.udev = {
+    ledger.enable = true;
+    keyboard-zsa.enable = true;
   };
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  features.power.resumeDevice = "/dev/disk/by-uuid/ff4750e7-3a9f-42c2-bb68-c458a6560540";
 
   boot.kernelParams = [ "pcie_aspm.policy=powersupersave" ];
-
-  boot.resumeDevice = "/dev/disk/by-uuid/ff4750e7-3a9f-42c2-bb68-c458a6560540";
-
-  services.logind.settings.Login = {
-    HandleLidSwitch = "suspend-then-hibernate";
-    HandlePowerKey = "suspend-then-hibernate";
-    IdleAction = "suspend-then-hibernate";
-    IdleActionSec = "15min";
-  };
-
-  systemd.sleep.settings.Sleep = {
-    HibernateDelaySec = "30min";
-  };
 
   programs.nix-ld.libraries = options.programs.nix-ld.libraries.default;
 
@@ -40,8 +26,6 @@
   services.teamviewer.enable = true;
 
   services.hardware.bolt.enable = true;
-  hardware.keyboard.zsa.enable = true;
-  hardware.ledger.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   hardware.inputmodule.enable = true;
 

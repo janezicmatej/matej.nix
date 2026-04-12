@@ -1,25 +1,30 @@
 {
   nixos =
     { lib, config, ... }:
+    let
+      cfg = config.features.localisation;
+    in
     {
-      options = {
-        localisation = {
-          timeZone = lib.mkOption {
-            type = lib.types.str;
-          };
+      options.features.localisation = {
+        enable = lib.mkEnableOption "localisation";
 
-          defaultLocale = lib.mkOption {
-            type = lib.types.str;
-          };
+        timeZone = lib.mkOption {
+          type = lib.types.str;
+          default = "Europe/Ljubljana";
+        };
+
+        defaultLocale = lib.mkOption {
+          type = lib.types.str;
+          default = "en_US.UTF-8";
         };
       };
 
-      config = {
-        time.timeZone = config.localisation.timeZone;
-        i18n.defaultLocale = config.localisation.defaultLocale;
+      config = lib.mkIf cfg.enable {
+        time.timeZone = cfg.timeZone;
+        i18n.defaultLocale = cfg.defaultLocale;
 
         # NOTE:(@janezicmatej) some apps (e.g. java) need TZ env var explicitly
-        environment.variables.TZ = config.localisation.timeZone;
+        environment.variables.TZ = cfg.timeZone;
       };
     };
 }

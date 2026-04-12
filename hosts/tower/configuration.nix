@@ -1,38 +1,28 @@
 {
   config,
-  lib,
-  inputs,
   userKeys,
   ...
 }:
 
 {
-  imports = [
-    inputs.lanzaboote.nixosModules.lanzaboote
-  ];
+  features.nix-settings.towerCache.enable = false;
+  features.bootloader.mode = "lanzaboote";
+  features.desktop.bluetooth.enable = true;
+  features.gnupg.yubikey.enable = true;
+  features.udev = {
+    ledger.enable = true;
+    keyboard-zsa.enable = true;
+  };
+  features.initrd-ssh = {
+    networkModule = "r8169";
+    authorizedKeys = userKeys.sshAuthorizedKeys;
+  };
 
   # nix store signing
   sops.secrets.nix-signing-key.sopsFile = ../../secrets/tower.yaml;
   nix.settings.secret-key-files = [ config.sops.secrets.nix-signing-key.path ];
 
-  localisation = {
-    timeZone = "Europe/Ljubljana";
-    defaultLocale = "en_US.UTF-8";
-  };
-
-  initrd-ssh = {
-    networkModule = "r8169";
-    authorizedKeys = userKeys.sshAuthorizedKeys;
-  };
-
-  # lanzaboote secure boot
   boot.kernelParams = [ "btusb.reset=1" ];
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.enable = lib.mkForce false;
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/var/lib/sbctl";
-  };
 
   services.udisks2.enable = true;
 
