@@ -2,9 +2,6 @@
 {
   imports = [ inputs.disko.nixosModules.disko ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   disko.devices.disk.main = {
     type = "disk";
     device = "/dev/nvme0n1";
@@ -30,11 +27,6 @@
         };
       };
     };
-  };
-
-  localisation = {
-    timeZone = "Europe/Ljubljana";
-    defaultLocale = "en_US.UTF-8";
   };
 
   system.stateVersion = "25.11";

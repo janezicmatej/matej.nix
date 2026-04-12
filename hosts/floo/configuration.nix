@@ -2,6 +2,8 @@
 {
   imports = [ inputs.disko.nixosModules.disko ];
 
+  features.filedrop.sopsFile = ../../secrets/floo.yaml;
+
   boot.loader.grub.enable = true;
 
   disko.devices.disk.main = {
@@ -24,11 +26,6 @@
         };
       };
     };
-  };
-
-  localisation = {
-    timeZone = "Europe/Ljubljana";
-    defaultLocale = "en_US.UTF-8";
   };
 
   system.stateVersion = "25.11";

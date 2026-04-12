@@ -5,6 +5,7 @@
   ...
 }:
 {
+  features.nix-settings.towerCache.enable = false;
   # no hardware firmware needed in a VM
   hardware.enableRedistributableFirmware = lib.mkForce false;
   hardware.wirelessRegulatoryDatabase = lib.mkForce false;
@@ -28,18 +29,12 @@
       );
     };
 
-  vm-guest.headless = true;
-
-  vm-9p-automount.user = "matej";
-
-  localisation = {
-    timeZone = "UTC";
-    defaultLocale = "en_US.UTF-8";
+  features.vm-guest.headless = true;
+  features.vm-guest.automount = {
+    enable = true;
+    user = "matej";
   };
-
-  home-manager.users.matej = {
-    neovim.dotfiles = inputs.nvim;
-  };
+  features.neovim.dotfiles = inputs.nvim;
 
   # ensure .config exists with correct ownership before automount
   systemd.tmpfiles.rules = [ "d /home/matej/.config 0755 matej users -" ];

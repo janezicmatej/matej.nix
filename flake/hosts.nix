@@ -15,25 +15,29 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
-        "openssh"
-        "localisation"
-        "gnupg"
-        "shell"
-        "desktop"
-        "sway"
-        "greeter"
-        "printing"
-        "networkmanager"
-        "docker"
-        "tailscale"
-        "nix-ld"
-        "yubikey"
-        "calibre"
-        "gaming"
-        "direnv"
-        "neovim"
-        "dev"
+        "bootloader"
         "claude"
+        "desktop"
+        "dev"
+        "direnv"
+        "docker"
+        "gaming"
+        "git"
+        "gnupg"
+        "localisation"
+        "neovim"
+        "networkmanager"
+        "nix-ld"
+        "nix-settings"
+        "onepassword"
+        "openssh"
+        "power"
+        "printing"
+        "shell"
+        "sway"
+        "tailscale"
+        "udev"
+        "zsh"
       ];
     };
 
@@ -41,27 +45,30 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
-        "openssh"
-        "localisation"
-        "gnupg"
-        "shell"
-        "desktop"
-        "sway"
-        "greeter"
-        "printing"
-        "networkmanager"
-        "docker"
-        "tailscale"
-        "nix-ld"
-        "yubikey"
-        "calibre"
-        "gaming"
-        "initrd-ssh"
-        "direnv"
-        "neovim"
-        "dev"
+        "bootloader"
         "claude"
+        "desktop"
+        "dev"
+        "direnv"
+        "docker"
+        "gaming"
+        "git"
+        "gnupg"
         "harmonia"
+        "initrd-ssh"
+        "localisation"
+        "neovim"
+        "networkmanager"
+        "nix-ld"
+        "nix-settings"
+        "onepassword"
+        "openssh"
+        "printing"
+        "shell"
+        "sway"
+        "tailscale"
+        "udev"
+        "zsh"
       ];
     };
 
@@ -70,7 +77,9 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
+        "nix-settings"
         "openssh"
+        "zsh"
       ];
     };
 
@@ -78,11 +87,14 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
-        "openssh"
+        "bootloader"
         "localisation"
+        "nix-settings"
+        "openssh"
+        "remote-base"
         "shell"
         "tailscale"
-        "remote-base"
+        "zsh"
       ];
     };
 
@@ -91,12 +103,14 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
-        "openssh"
+        "filedrop"
         "localisation"
+        "nix-settings"
+        "openssh"
+        "remote-base"
         "shell"
         "tailscale"
-        "remote-base"
-        "filedrop"
+        "zsh"
       ];
     };
 
@@ -104,14 +118,15 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
-        "localisation"
+        "bootloader"
+        "desktop"
         "gnupg"
-        "shell-minimal"
-        "desktop-minimal"
-        "sway"
-        "greeter"
+        "localisation"
         "networkmanager"
-        "yubikey"
+        "nix-settings"
+        "sway"
+        "udev"
+        "zsh"
       ];
     };
 
@@ -119,16 +134,18 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
-        "openssh"
-        "localisation"
-        "gnupg"
-        "shell"
-        "vm-guest"
-        "vm-9p-automount"
-        "docker"
-        "neovim"
         "claude"
         "dev"
+        "docker"
+        "git"
+        "gnupg"
+        "localisation"
+        "neovim"
+        "nix-settings"
+        "openssh"
+        "shell"
+        "vm-guest"
+        "zsh"
       ];
     };
   };
