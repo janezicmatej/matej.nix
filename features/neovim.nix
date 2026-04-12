@@ -1,4 +1,17 @@
 {
+  nixos =
+    { lib, ... }:
+    {
+      options.features.neovim = {
+        enable = lib.mkEnableOption "neovim";
+
+        dotfiles = lib.mkOption {
+          type = lib.types.nullOr lib.types.path;
+          default = null;
+        };
+      };
+    };
+
   home =
     {
       config,
@@ -6,24 +19,21 @@
       lib,
       pkgs,
       inputs,
+      osConfig,
       ...
     }:
+    let
+      cfg = osConfig.features.neovim;
+    in
     {
-      options = {
-        neovim.dotfiles = lib.mkOption {
-          type = lib.types.nullOr lib.types.path;
-          default = null;
-        };
-      };
-
-      config = lib.mkMerge [
+      config = lib.mkIf cfg.enable (lib.mkMerge [
         (lib.optionalAttrs (options ? stylix) {
-          # disable stylix neovim target when stylix is present (loaded by desktop feature)
+          # disable stylix neovim target when stylix is present
           stylix.targets.neovim.enable = false;
         })
         {
-          xdg.configFile."nvim" = lib.mkIf (config.neovim.dotfiles != null) {
-            source = config.neovim.dotfiles;
+          xdg.configFile."nvim" = lib.mkIf (cfg.dotfiles != null) {
+            source = cfg.dotfiles;
           };
 
           programs.neovim = {
@@ -64,6 +74,6 @@
             ];
           };
         }
-      ];
+      ]);
     };
 }

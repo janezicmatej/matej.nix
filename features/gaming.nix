@@ -1,14 +1,21 @@
 {
   nixos =
-    { pkgs, ... }:
+    { config, lib, pkgs, ... }:
+    let
+      cfg = config.features.gaming;
+    in
     {
-      programs.steam = {
-        enable = true;
-        remotePlay.openFirewall = true;
-        dedicatedServer.openFirewall = true;
-        localNetworkGameTransfers.openFirewall = true;
-      };
+      options.features.gaming.enable = lib.mkEnableOption "gaming";
 
-      environment.systemPackages = [ pkgs.prismlauncher ];
+      config = lib.mkIf cfg.enable {
+        programs.steam = {
+          enable = true;
+          remotePlay.openFirewall = true;
+          dedicatedServer.openFirewall = true;
+          localNetworkGameTransfers.openFirewall = true;
+        };
+
+        environment.systemPackages = [ pkgs.prismlauncher ];
+      };
     };
 }

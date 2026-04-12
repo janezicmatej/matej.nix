@@ -1,18 +1,23 @@
 {
   nixos =
     { lib, config, ... }:
+    let
+      cfg = config.features.openssh;
+    in
     {
-      options = {
-        openssh.port = lib.mkOption {
+      options.features.openssh = {
+        enable = lib.mkEnableOption "openssh";
+
+        port = lib.mkOption {
           type = lib.types.port;
           default = 22;
         };
       };
 
-      config = {
+      config = lib.mkIf cfg.enable {
         services.openssh = {
           enable = true;
-          ports = [ config.openssh.port ];
+          ports = [ cfg.port ];
           settings = {
             PasswordAuthentication = false;
             AllowUsers = null;

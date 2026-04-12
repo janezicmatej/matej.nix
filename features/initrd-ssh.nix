@@ -2,6 +2,7 @@
   nixos =
     { lib, config, ... }:
     let
+      cfg = config.features.initrd-ssh;
       keyDir = "/etc/secrets/initrd";
 
       mkIpString =
@@ -15,44 +16,45 @@
         "${address}::${gateway}:${netmask}::${interface}:none";
     in
     {
-      options = {
-        initrd-ssh = {
-          ip = {
-            enable = lib.mkEnableOption "static IP for initrd (otherwise DHCP)";
+      options.features.initrd-ssh = {
+        enable = lib.mkEnableOption "initrd ssh";
 
-            address = lib.mkOption {
-              type = lib.types.str;
-            };
+        ip = {
+          enable = lib.mkEnableOption "static IP for initrd (otherwise DHCP)";
 
-            gateway = lib.mkOption {
-              type = lib.types.str;
-            };
-
-            netmask = lib.mkOption {
-              type = lib.types.str;
-              default = "255.255.255.0";
-            };
-
-            interface = lib.mkOption {
-              type = lib.types.str;
-            };
+          address = lib.mkOption {
+            type = lib.types.str;
           };
 
-          authorizedKeys = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            default = [ ];
+          gateway = lib.mkOption {
+            type = lib.types.str;
           };
 
-          networkModule = lib.mkOption {
+          netmask = lib.mkOption {
+            type = lib.types.str;
+            default = "255.255.255.0";
+          };
+
+          interface = lib.mkOption {
             type = lib.types.str;
           };
         };
+
+        authorizedKeys = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+        };
+
+        networkModule = lib.mkOption {
+          type = lib.types.str;
+        };
       };
 
-      config = {
-        boot.initrd.kernelModules = [ config.initrd-ssh.networkModule ];
-        boot.kernelParams = lib.mkIf config.initrd-ssh.ip.enable [
-          "ip=${mkIpString config.initrd-ssh.ip}"
+      config = lib.mkIf cfg.enable {
+        boot.initrd.availableKernelModules = [ cfg.networkModule ];
+        boot.initrd.kernelModules = [ cfg.networkModule ];
+        boot.kernelParams = lib.mkIf cfg.ip.enable [
+          "ip=${mkIpString cfg.ip}"
         ];
 
         boot.initrd.network = {
@@ -64,7 +66,7 @@
               "${keyDir}/ssh_host_rsa_key"
               "${keyDir}/ssh_host_ed25519_key"
             ];
-            inherit (config.initrd-ssh) authorizedKeys;
+            inherit (cfg) authorizedKeys;
           };
           postCommands = ''
             echo 'cryptsetup-askpass' >> /root/.profile

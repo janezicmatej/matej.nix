@@ -27,7 +27,19 @@ let
   hostConfig = ../hosts/${name}/configuration.nix;
   hostHWConfig = ../hosts/${name}/hardware-configuration.nix;
 
-  # load feature with path check
+  # auto-discover all features, excluding user-* and default.nix
+  featureDir = builtins.readDir ../features;
+  allFeatureNames = lib.pipe featureDir [
+    (lib.filterAttrs (
+      n: t:
+      (t == "regular" && lib.hasSuffix ".nix" n && n != "default.nix" && !lib.hasPrefix "user-" n)
+      || (t == "directory" && builtins.pathExists ../features/${n}/default.nix)
+    ))
+    builtins.attrNames
+    (map (n: lib.removeSuffix ".nix" n))
+  ];
+
+  # load all features unconditionally
   loadFeature =
     f:
     assert
@@ -35,7 +47,7 @@ let
       || throw "feature '${f}' not found at ${toString (featurePath f)}";
     import (featurePath f);
 
-  loadedFeatures = map loadFeature features;
+  loadedFeatures = map loadFeature allFeatureNames;
 
   # load user feature with path check
   userFeature =
@@ -55,31 +67,42 @@ let
   # collect nixos and home modules from all features
   nixosMods = map (f: f.nixos) (builtins.filter (f: f ? nixos) allFeatures);
   homeMods = map (f: f.home) (builtins.filter (f: f ? home) allFeatures);
+
+  # translate features list to enable flags
+  featureEnableModule =
+    { lib, ... }:
+    {
+      config.features = lib.genAttrs features (_: {
+        enable = true;
+      });
+    };
 in
 nixpkgs.lib.nixosSystem {
   inherit system;
-  modules = [
-    ../nix.nix
-    inputs.sops-nix.nixosModules.sops
+  modules =
+    [
+      inputs.sops-nix.nixosModules.sops
+      inputs.stylix.nixosModules.stylix
 
-    { nixpkgs.overlays = overlays; }
-    { nixpkgs.config.allowUnfree = true; }
-    { networking.hostName = name; }
+      { nixpkgs.overlays = overlays; }
+      { nixpkgs.config.allowUnfree = true; }
+      { networking.hostName = name; }
 
-    hostConfig
-  ]
-  ++ lib.optional (builtins.pathExists hostHWConfig) hostHWConfig
-  ++ nixosMods
-  ++ lib.optionals hasUser [
-    inputs.home-manager.nixosModules.home-manager
-    {
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.backupFileExtension = "backup";
-      home-manager.users.${user}.imports = homeMods;
-      home-manager.extraSpecialArgs = { inherit inputs; };
-    }
-  ];
+      featureEnableModule
+      hostConfig
+    ]
+    ++ lib.optional (builtins.pathExists hostHWConfig) hostHWConfig
+    ++ nixosMods
+    ++ lib.optionals hasUser [
+      inputs.home-manager.nixosModules.home-manager
+      {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.backupFileExtension = "backup";
+        home-manager.users.${user}.imports = homeMods;
+        home-manager.extraSpecialArgs = { inherit inputs; };
+      }
+    ];
   specialArgs = {
     inherit inputs userKeys user;
   };
