@@ -23,6 +23,7 @@
           packages.ahab
           pkgs.just
           pkgs.presenterm
+          pkgs.qemu
         ];
       };
     };

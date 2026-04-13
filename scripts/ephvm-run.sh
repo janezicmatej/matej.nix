@@ -27,7 +27,9 @@ info() {
 
 # globals for cleanup trap
 CLEANUP_OVERLAY=""
+QEMU_PID=""
 cleanup() {
+	[ -n "$QEMU_PID" ] && kill "$QEMU_PID" 2>/dev/null && wait "$QEMU_PID" 2>/dev/null
 	[ -n "$CLEANUP_OVERLAY" ] && rm -rf "$CLEANUP_OVERLAY"
 	return 0
 }
@@ -39,11 +41,12 @@ Usage: ephvm-run.sh [options]
 
 Options:
   --mount <path>       Mount host directory into VM (repeatable)
-  --claude             Mount claude config dir (requires CLAUDE_CONFIG_DIR)
+  --no-claude          Skip mounting claude config dir
   --disk-size <size>   Resize guest disk (e.g. 50G)
-  --memory <size>      VM memory (default: 8G)
-  --cpus <n>           VM CPUs (default: 4)
-  --ssh-port <port>    SSH port forward (default: 2222)
+  --memory <size>      VM memory (default: 4G)
+  --cpus <n>           VM CPUs (default: 2)
+  --ssh-port <port>    Use specific SSH port (default: auto)
+  --serial             Attach to serial console instead of SSH
   -h, --help           Show usage
 EOF
 	exit "${1:-0}"
@@ -52,7 +55,7 @@ EOF
 main() {
 	setup_colors
 
-	local ssh_port=2222 memory=8G cpus=4 claude=false disk_size=""
+	local ssh_port="" memory=4G cpus=2 claude=true disk_size="" serial=false
 	local -a mounts=()
 
 	while [ $# -gt 0 ]; do
@@ -61,8 +64,8 @@ main() {
 			mounts+=("$2")
 			shift 2
 			;;
-		--claude)
-			claude=true
+		--no-claude)
+			claude=false
 			shift
 			;;
 		--disk-size)
@@ -81,6 +84,10 @@ main() {
 			ssh_port="$2"
 			shift 2
 			;;
+		--serial)
+			serial=true
+			shift
+			;;
 		-h | --help) usage ;;
 		*)
 			echo "${red}error:${reset} unknown option: $1" >&2
@@ -91,7 +98,9 @@ main() {
 
 	info "building ephvm image..."
 	local image_dir image
-	image_dir=$(nix build --no-link --print-out-paths .#nixosConfigurations.ephvm.config.system.build.images.qemu)
+	[ -n "${EPHVM_FLAKE:-}" ] || die "EPHVM_FLAKE must be set to the flake directory"
+	local flake="$EPHVM_FLAKE"
+	image_dir=$(nix build --no-link --print-out-paths "${flake}#nixosConfigurations.ephvm.config.system.build.images.qemu")
 	image=$(find "$image_dir" -name '*.qcow2' -print -quit)
 	[ -n "$image" ] || die "no qcow2 image found in $image_dir"
 
@@ -106,8 +115,23 @@ main() {
 		drive_arg="file=$image,format=qcow2,snapshot=on"
 	fi
 
+	command -v qemu-system-x86_64 &>/dev/null || die "qemu-system-x86_64 not found"
+
 	local accel="tcg"
 	[ -r /dev/kvm ] && accel="kvm"
+
+	# auto-allocate ssh port unless serial mode
+	if [ "$serial" = false ] && [ -z "$ssh_port" ]; then
+		ssh_port=10022
+		while ss -tln | grep -q ":${ssh_port}\b"; do
+			ssh_port=$((ssh_port + 1))
+		done
+	fi
+
+	local nic_arg="user"
+	if [ -n "$ssh_port" ]; then
+		nic_arg="user,hostfwd=tcp::${ssh_port}-:22"
+	fi
 
 	local -a qemu_args=(
 		qemu-system-x86_64
@@ -115,7 +139,7 @@ main() {
 		-m "$memory"
 		-smp "$cpus"
 		-drive "$drive_arg"
-		-nic "user,hostfwd=tcp::${ssh_port}-:22"
+		-nic "$nic_arg"
 		-nographic
 	)
 
@@ -135,7 +159,7 @@ main() {
 	done
 
 	if [ "$claude" = true ]; then
-		[ -n "${CLAUDE_CONFIG_DIR:-}" ] || die "--claude requires CLAUDE_CONFIG_DIR to be set"
+		[ -n "${CLAUDE_CONFIG_DIR:-}" ] || die "CLAUDE_CONFIG_DIR must be set (use --no-claude to skip)"
 		mkdir -p "$CLAUDE_CONFIG_DIR"
 		local claude_dir
 		claude_dir=$(realpath "$CLAUDE_CONFIG_DIR")
@@ -147,10 +171,31 @@ main() {
 	fi
 
 	info "---"
-	info "Accel: $accel | SSH: ssh -p $ssh_port matej@localhost"
+	info "Accel: $accel"
 	info "---"
 
-	exec "${qemu_args[@]}"
+	if [ "$serial" = true ]; then
+		exec "${qemu_args[@]}"
+	fi
+
+	# start qemu in background and auto-ssh
+	"${qemu_args[@]}" &>/dev/null &
+	QEMU_PID=$!
+
+	info "waiting for vm (port $ssh_port)..."
+	local attempts=0
+	while ! (echo > /dev/tcp/localhost/"$ssh_port") 2>/dev/null; do
+		attempts=$((attempts + 1))
+		[ $attempts -gt 60 ] && die "vm did not become ready in 60s"
+		kill -0 "$QEMU_PID" 2>/dev/null || die "qemu exited unexpectedly"
+		sleep 1
+	done
+
+	ssh -p "$ssh_port" -t \
+		-o StrictHostKeyChecking=no \
+		-o UserKnownHostsFile=/dev/null \
+		-o LogLevel=ERROR \
+		matej@localhost
 }
 
 main "$@"
