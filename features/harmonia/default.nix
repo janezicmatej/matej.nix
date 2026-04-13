@@ -43,15 +43,10 @@
           path = [ config.nix.package ];
         };
 
-        systemd.timers.cache-builder = {
-          description = "Periodically build all host closures";
-          wantedBy = [ "timers.target" ];
-          timerConfig = {
-            OnUnitActiveSec = "15min";
-            OnBootSec = "5min";
-            Persistent = true;
-          };
-        };
+        # restart cache-builder after every nixos switch (non-blocking)
+        system.activationScripts.cache-builder = lib.stringAfter [ "specialfs" ] ''
+          ${config.systemd.package}/bin/systemctl restart --no-block cache-builder.service || true
+        '';
       };
     };
 }
