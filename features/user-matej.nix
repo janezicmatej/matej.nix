@@ -9,22 +9,20 @@ in
     sshAuthorizedKeys = sshKeys;
   };
 
-  nixos =
-    { ... }:
-    {
-      users.users.matej = {
-        uid = 1000;
-        isNormalUser = true;
-        home = "/home/matej";
-        extraGroups = [ "wheel" ];
-        openssh.authorizedKeys.keys = sshKeys;
-      };
-
-      users.groups.matej = {
-        gid = 1000;
-        members = [ "matej" ];
-      };
+  nixos = _: {
+    users.users.matej = {
+      uid = 1000;
+      isNormalUser = true;
+      home = "/home/matej";
+      extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = sshKeys;
     };
+
+    users.groups.matej = {
+      gid = 1000;
+      members = [ "matej" ];
+    };
+  };
 
   home = _: {
     home.stateVersion = "26.05";

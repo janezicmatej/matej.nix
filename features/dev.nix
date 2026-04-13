@@ -6,7 +6,13 @@
     };
 
   home =
-    { pkgs, lib, inputs, osConfig, ... }:
+    {
+      pkgs,
+      lib,
+      inputs,
+      osConfig,
+      ...
+    }:
     let
       cfg = osConfig.features.dev;
       packages = inputs.self.outputs.packages.${pkgs.stdenv.hostPlatform.system};

@@ -79,30 +79,29 @@ let
 in
 nixpkgs.lib.nixosSystem {
   inherit system;
-  modules =
-    [
-      inputs.sops-nix.nixosModules.sops
-      inputs.stylix.nixosModules.stylix
+  modules = [
+    inputs.sops-nix.nixosModules.sops
+    inputs.stylix.nixosModules.stylix
 
-      { nixpkgs.overlays = overlays; }
-      { nixpkgs.config.allowUnfree = true; }
-      { networking.hostName = name; }
+    { nixpkgs.overlays = overlays; }
+    { nixpkgs.config.allowUnfree = true; }
+    { networking.hostName = name; }
 
-      featureEnableModule
-      hostConfig
-    ]
-    ++ lib.optional (builtins.pathExists hostHWConfig) hostHWConfig
-    ++ nixosMods
-    ++ lib.optionals hasUser [
-      inputs.home-manager.nixosModules.home-manager
-      {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.backupFileExtension = "backup";
-        home-manager.users.${user}.imports = homeMods;
-        home-manager.extraSpecialArgs = { inherit inputs; };
-      }
-    ];
+    featureEnableModule
+    hostConfig
+  ]
+  ++ lib.optional (builtins.pathExists hostHWConfig) hostHWConfig
+  ++ nixosMods
+  ++ lib.optionals hasUser [
+    inputs.home-manager.nixosModules.home-manager
+    {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
+      home-manager.users.${user}.imports = homeMods;
+      home-manager.extraSpecialArgs = { inherit inputs; };
+    }
+  ];
   specialArgs = {
     inherit inputs userKeys user;
   };

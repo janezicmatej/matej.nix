@@ -6,7 +6,12 @@
     };
 
   home =
-    { pkgs, lib, osConfig, ... }:
+    {
+      pkgs,
+      lib,
+      osConfig,
+      ...
+    }:
     let
       cfg = osConfig.features.claude;
     in

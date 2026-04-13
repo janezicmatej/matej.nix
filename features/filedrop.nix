@@ -1,6 +1,11 @@
 {
   nixos =
-    { config, lib, userKeys, ... }:
+    {
+      config,
+      lib,
+      userKeys,
+      ...
+    }:
     let
       cfg = config.features.filedrop;
     in

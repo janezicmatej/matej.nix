@@ -1,6 +1,11 @@
 {
   nixos =
-    { config, lib, inputs, ... }:
+    {
+      config,
+      lib,
+      inputs,
+      ...
+    }:
     let
       cfg = config.features.direnv;
     in

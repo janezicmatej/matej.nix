@@ -75,9 +75,11 @@
   # TODO:(@janezicmatej) replace ssh with virtio-console (hvc0) when qemu 11.0 lands
   # https://www.mail-archive.com/qemu-devel@nongnu.org/msg1162844.html
   # accept any ssh key (ephemeral localhost-only vm)
-  services.openssh.settings.AuthorizedKeysCommand = let
-    acceptKey = pkgs.writeShellScript "ephvm-accept-key" ''echo "$1 $2"'';
-  in "${acceptKey} %t %k";
+  services.openssh.settings.AuthorizedKeysCommand =
+    let
+      acceptKey = pkgs.writeShellScript "ephvm-accept-key" ''echo "$1 $2"'';
+    in
+    "${acceptKey} %t %k";
   services.openssh.settings.AuthorizedKeysCommandUser = "nobody";
 
   # writable claude config via 9p

@@ -1,6 +1,12 @@
 {
   nixos =
-    { config, lib, pkgs, user, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      user,
+      ...
+    }:
     let
       cfg = config.features.zsh;
     in
@@ -15,22 +21,29 @@
         };
       };
 
-      config = lib.mkIf cfg.enable (lib.mkMerge [
-        {
-          programs.zsh.enable = true;
-          environment.etc."zshenv".text = ''
-            export ZDOTDIR=$HOME/.config/zsh
-          '';
-        }
+      config = lib.mkIf cfg.enable (
+        lib.mkMerge [
+          {
+            programs.zsh.enable = true;
+            environment.etc."zshenv".text = ''
+              export ZDOTDIR=$HOME/.config/zsh
+            '';
+          }
 
-        (lib.mkIf cfg.loginShell.enable {
-          users.users.${user}.shell = pkgs.zsh;
-        })
-      ]);
+          (lib.mkIf cfg.loginShell.enable {
+            users.users.${user}.shell = pkgs.zsh;
+          })
+        ]
+      );
     };
 
   home =
-    { pkgs, lib, osConfig, ... }:
+    {
+      pkgs,
+      lib,
+      osConfig,
+      ...
+    }:
     let
       cfg = osConfig.features.zsh;
     in

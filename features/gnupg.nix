@@ -1,6 +1,11 @@
 {
   nixos =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       cfg = config.features.gnupg;
     in
@@ -14,23 +19,25 @@
         };
       };
 
-      config = lib.mkIf cfg.enable (lib.mkMerge [
-        {
-          programs.gnupg.agent = {
-            enable = true;
-            enableSSHSupport = true;
-            enableExtraSocket = true;
-          };
-        }
+      config = lib.mkIf cfg.enable (
+        lib.mkMerge [
+          {
+            programs.gnupg.agent = {
+              enable = true;
+              enableSSHSupport = true;
+              enableExtraSocket = true;
+            };
+          }
 
-        (lib.mkIf cfg.yubikey.enable {
-          environment.systemPackages = with pkgs; [
-            yubikey-personalization
-            yubikey-manager
-          ];
+          (lib.mkIf cfg.yubikey.enable {
+            environment.systemPackages = with pkgs; [
+              yubikey-personalization
+              yubikey-manager
+            ];
 
-          services.pcscd.enable = true;
-        })
-      ]);
+            services.pcscd.enable = true;
+          })
+        ]
+      );
     };
 }

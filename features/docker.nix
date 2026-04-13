@@ -1,6 +1,11 @@
 {
   nixos =
-    { config, lib, user, ... }:
+    {
+      config,
+      lib,
+      user,
+      ...
+    }:
     let
       cfg = config.features.docker;
     in
