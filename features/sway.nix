@@ -41,6 +41,8 @@
               extraSessionCommands = ''
                 # fix for java awt apps not rendering
                 export _JAVA_AWT_WM_NONREPARENTING=1
+                # propagate XDG_DATA_DIRS to dbus/systemd for d-bus activated apps
+                dbus-update-activation-environment --systemd XDG_DATA_DIRS
               '';
             };
 
