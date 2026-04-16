@@ -57,9 +57,10 @@
           "ip=${mkIpString cfg.ip}"
         ];
 
+        boot.initrd.systemd.enable = true;
+
         boot.initrd.network = {
           enable = true;
-          udhcpc.enable = !cfg.ip.enable;
           ssh = {
             enable = true;
             port = 22;
@@ -69,10 +70,18 @@
             ];
             inherit (cfg) authorizedKeys;
           };
-          postCommands = ''
-            echo 'cryptsetup-askpass' >> /root/.profile
-          '';
         };
+
+        # systemd-networkd retries DHCP indefinitely, unlike udhcpc
+        boot.initrd.systemd.network.networks = lib.mkIf (!cfg.ip.enable) {
+          "10-initrd" = {
+            matchConfig.Driver = cfg.networkModule;
+            networkConfig.DHCP = "yes";
+          };
+        };
+
+        # forward LUKS password prompt to the SSH session
+        boot.initrd.systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
       };
     };
 }
