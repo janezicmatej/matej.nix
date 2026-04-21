@@ -59,6 +59,9 @@
 
         boot.initrd.systemd.enable = true;
 
+        # remote unlock may take a while; don't let device units give up
+        boot.initrd.systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
+
         boot.initrd.network = {
           enable = true;
           ssh = {
