@@ -39,6 +39,7 @@
 
             programs.neovim = {
               enable = true;
+              sideloadInitLua = true;
               vimAlias = true;
               defaultEditor = true;
               package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
