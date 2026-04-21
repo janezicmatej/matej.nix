@@ -10,6 +10,7 @@
     inputs.nixos-hardware.nixosModules.framework-16-amd-ai-300-series
   ];
 
+  features.bootloader.plymouth.enable = true;
   features.desktop.bluetooth.enable = true;
   features.gnupg.yubikey.enable = true;
   features.udev = {

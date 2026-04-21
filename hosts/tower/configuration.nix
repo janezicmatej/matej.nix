@@ -6,7 +6,10 @@
 
 {
   features.nix-settings.towerCache.enable = false;
-  features.bootloader.mode = "lanzaboote";
+  features.bootloader = {
+    mode = "lanzaboote";
+    plymouth.enable = true;
+  };
   features.desktop.bluetooth.enable = true;
   features.gnupg.yubikey.enable = true;
   features.udev = {
@@ -23,6 +26,8 @@
   nix.settings.secret-key-files = [ config.sops.secrets.nix-signing-key.path ];
 
   boot.kernelParams = [ "btusb.reset=1" ];
+  # early kms so plymouth lands on amdgpu, not simpledrm
+  hardware.amdgpu.initrd.enable = true;
 
   services.udisks2.enable = true;
 
