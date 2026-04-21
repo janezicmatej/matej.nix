@@ -71,6 +71,9 @@
               ];
             };
 
+            # enable ozone/wayland for electron apps so idle detection works
+            environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
             fonts.packages = with pkgs; [
               font-awesome
               nerd-fonts.jetbrains-mono
@@ -114,7 +117,7 @@
               bolt-launcher
               libnotify
               bibata-cursors
-              vesktop
+              discord
               rocketchat-desktop
               telegram-desktop
               slack
@@ -256,7 +259,7 @@
 
                 # app deep links
                 "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
-                "x-scheme-handler/discord" = "vesktop.desktop";
+                "x-scheme-handler/discord" = "discord.desktop";
                 "x-scheme-handler/slack" = "slack.desktop";
               };
             };
