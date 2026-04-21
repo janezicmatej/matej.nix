@@ -40,6 +40,8 @@
               "flakes"
             ];
             download-buffer-size = 2 * 1024 * 1024 * 1024;
+            download-attempts = 3;
+            fallback = true;
             warn-dirty = false;
             substituters = [
               "https://cache.nixos.org"
