@@ -41,7 +41,8 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [
     pkgs.makeWrapper
-  ] ++ lib.optionals stdenv.hostPlatform.isLinux [ pkgs.patchelf ];
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [ pkgs.patchelf ];
 
   dontBuild = true;
   dontConfigure = true;
@@ -56,26 +57,28 @@ stdenv.mkDerivation {
   # NOTE:(@janezicmatej) upstream is a bun single-file-executable; the
   # embedded script payload sits at the tail of the ELF, so autoPatchelfHook's
   # section-layout changes corrupt it — only the interpreter can be rewritten
-  postFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
-    patchelf --set-interpreter ${stdenv.cc.bintools.dynamicLinker} $out/bin/claude
-  '' + ''
-    wrapProgram $out/bin/claude \
-      --set DISABLE_AUTOUPDATER 1 \
-      --set-default FORCE_AUTOUPDATE_PLUGINS 1 \
-      --set DISABLE_INSTALLATION_CHECKS 1 \
-      --unset DEV \
-      --prefix PATH : ${
-        lib.makeBinPath (
-          [
-            pkgs.procps
-          ]
-          ++ lib.optionals stdenv.hostPlatform.isLinux [
-            pkgs.bubblewrap
-            pkgs.socat
-          ]
-        )
-      }
-  '';
+  postFixup =
+    lib.optionalString stdenv.hostPlatform.isLinux ''
+      patchelf --set-interpreter ${stdenv.cc.bintools.dynamicLinker} $out/bin/claude
+    ''
+    + ''
+      wrapProgram $out/bin/claude \
+        --set DISABLE_AUTOUPDATER 1 \
+        --set-default FORCE_AUTOUPDATE_PLUGINS 1 \
+        --set DISABLE_INSTALLATION_CHECKS 1 \
+        --unset DEV \
+        --prefix PATH : ${
+          lib.makeBinPath (
+            [
+              pkgs.procps
+            ]
+            ++ lib.optionals stdenv.hostPlatform.isLinux [
+              pkgs.bubblewrap
+              pkgs.socat
+            ]
+          )
+        }
+    '';
 
   meta = {
     description = "Agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster";
