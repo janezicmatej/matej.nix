@@ -130,15 +130,13 @@ main() {
 		CLEANUP_OVERLAY=$(mktemp -d)
 		local overlay="$CLEANUP_OVERLAY/overlay.qcow2"
 		qemu-img create -f qcow2 -b "$(realpath "$image")" -F qcow2 "$overlay" "$disk_size"
-		drive_arg="file=$overlay,format=qcow2"
+		drive_arg="if=none,id=hd0,file=$overlay,format=qcow2,cache=writeback,aio=threads,discard=unmap,detect-zeroes=unmap"
 	else
-		drive_arg="file=$image,format=qcow2,snapshot=on"
+		drive_arg="if=none,id=hd0,file=$image,format=qcow2,snapshot=on,cache=writeback,aio=threads,discard=unmap,detect-zeroes=unmap"
 	fi
 
 	command -v qemu-system-x86_64 &>/dev/null || die "qemu-system-x86_64 not found"
-
-	local accel="tcg"
-	[ -r /dev/kvm ] && accel="kvm"
+	[ -r /dev/kvm ] || die "/dev/kvm not readable; kvm is required"
 
 	# auto-allocate ssh port unless serial mode
 	if [ "$serial" = false ] && [ -z "$ssh_port" ]; then
@@ -148,25 +146,24 @@ main() {
 		done
 	fi
 
-	local nic_arg="user"
+	local nic_arg="user,model=virtio-net-pci"
 	if [ -n "$ssh_port" ]; then
-		nic_arg="user,hostfwd=tcp:127.0.0.1:${ssh_port}-:22"
+		nic_arg="user,model=virtio-net-pci,hostfwd=tcp:127.0.0.1:${ssh_port}-:22"
 	fi
 
 	local -a qemu_args=(
 		qemu-system-x86_64
-		-accel "$accel"
+		-accel kvm
+		-cpu host
 		-m "$memory"
 		-smp "$cpus"
 		-drive "$drive_arg"
+		-device "virtio-blk-pci,drive=hd0"
+		-device virtio-rng-pci
 		-nic "$nic_arg"
 		-nographic
 		-sandbox "on,obsolete=deny,elevateprivileges=deny,spawn=deny,resourcecontrol=deny"
 	)
-
-	if [ "$accel" != "tcg" ]; then
-		qemu_args+=(-cpu host)
-	fi
 
 	local fs_id=0 mount_path name tag
 	for mount_path in "${mounts[@]}"; do
@@ -200,7 +197,7 @@ main() {
 	fi
 
 	info "---"
-	info "Accel: $accel"
+	[ -n "$ssh_port" ] && info "SSH: ssh -p $ssh_port matej@localhost"
 	info "---"
 
 	if [ "$serial" = true ]; then
