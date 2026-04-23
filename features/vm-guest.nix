@@ -43,16 +43,12 @@
       config = lib.mkIf cfg.enable (
         lib.mkMerge [
           {
-            services.qemuGuest.enable = true;
             services.spice-vdagentd.enable = lib.mkIf (!cfg.headless) true;
 
             boot.kernelParams = lib.mkIf cfg.headless [ "console=ttyS0,115200" ];
 
+            # 9p autoloads on first mount
             boot.initrd.availableKernelModules = [
-              "9p"
-              "9pnet_virtio"
-            ];
-            boot.kernelModules = [
               "9p"
               "9pnet_virtio"
             ];
@@ -68,7 +64,6 @@
               curl
               wget
               htop
-              sshfs
             ];
           }
 
