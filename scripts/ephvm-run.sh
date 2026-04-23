@@ -27,13 +27,31 @@ info() {
 
 # globals for cleanup trap
 CLEANUP_OVERLAY=""
+CLEANUP_TMPDIR=""
 QEMU_PID=""
+VM_READY=false
 cleanup() {
 	[ -n "$QEMU_PID" ] && kill "$QEMU_PID" 2>/dev/null && wait "$QEMU_PID" 2>/dev/null
 	[ -n "$CLEANUP_OVERLAY" ] && rm -rf "$CLEANUP_OVERLAY"
+	# preserve tmpdir on abnormal exit so the qemu log survives for inspection
+	if [ -n "$CLEANUP_TMPDIR" ]; then
+		if [ "$VM_READY" = true ]; then
+			rm -rf "$CLEANUP_TMPDIR"
+		else
+			echo "qemu log preserved: $CLEANUP_TMPDIR/qemu.log" >&2
+		fi
+	fi
 	return 0
 }
 trap cleanup EXIT
+
+# returns 0 once the guest's sshd is speaking (first bytes are "SSH-")
+awaiting_ssh_banner() {
+	local port="$1"
+	local banner
+	banner=$(timeout 2 bash -c "exec 3<>/dev/tcp/localhost/$port; head -c 4 <&3" 2>/dev/null) || return 1
+	[ "$banner" = "SSH-" ]
+}
 
 usage() {
 	cat <<EOF
@@ -189,20 +207,31 @@ main() {
 		exec "${qemu_args[@]}"
 	fi
 
+	CLEANUP_TMPDIR=$(mktemp -d)
+	local qemu_log="$CLEANUP_TMPDIR/qemu.log"
+
 	# start qemu in background and auto-ssh
-	"${qemu_args[@]}" &>/dev/null &
+	"${qemu_args[@]}" &>"$qemu_log" &
 	QEMU_PID=$!
+
+	# throwaway ssh key (vm accepts any key via AuthorizedKeysCommand)
+	local ssh_key="$CLEANUP_TMPDIR/id_ed25519"
+	ssh-keygen -t ed25519 -f "$ssh_key" -N "" -q
 
 	info "waiting for vm (port $ssh_port)..."
 	local attempts=0
-	while ! (echo > /dev/tcp/localhost/"$ssh_port") 2>/dev/null; do
+	# poll for the real SSH banner, not TCP accept: qemu's user-mode nic
+	# accepts host-side the moment qemu starts, well before guest sshd is up
+	while ! awaiting_ssh_banner "$ssh_port"; do
 		attempts=$((attempts + 1))
-		[ $attempts -gt 60 ] && die "vm did not become ready in 60s"
+		[ $attempts -gt 120 ] && die "vm did not become ready in 60s"
 		kill -0 "$QEMU_PID" 2>/dev/null || die "qemu exited unexpectedly"
-		sleep 1
+		sleep 0.5
 	done
+	VM_READY=true
 
 	ssh -p "$ssh_port" -t \
+		-i "$ssh_key" \
 		-o StrictHostKeyChecking=no \
 		-o UserKnownHostsFile=/dev/null \
 		-o LogLevel=ERROR \
