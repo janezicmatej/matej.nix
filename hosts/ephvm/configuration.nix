@@ -13,19 +13,38 @@
   documentation.enable = false;
   environment.defaultPackages = [ ];
 
-  # compressed qcow2, no channel copy
+  # qcow2, no channel copy; post-processed with parallel zstd on qcow2 v3
+  # (~half the size of zlib v2, faster decompress)
   image.modules.qemu =
     { config, modulesPath, ... }:
     {
       system.build.image = lib.mkForce (
-        import (modulesPath + "/../lib/make-disk-image.nix") {
-          inherit lib config pkgs;
-          inherit (config.virtualisation) diskSize;
+        let
+          rawImage = import (modulesPath + "/../lib/make-disk-image.nix") {
+            inherit lib config pkgs;
+            inherit (config.virtualisation) diskSize;
+            inherit (config.image) baseName;
+            format = "qcow2";
+            copyChannel = false;
+            partitionTableType = "legacy";
+          };
           inherit (config.image) baseName;
-          format = "qcow2-compressed";
-          copyChannel = false;
-          partitionTableType = "legacy";
-        }
+        in
+        pkgs.runCommand baseName { nativeBuildInputs = [ pkgs.qemu-utils ]; } ''
+          mkdir -p $out
+          # qemu-img caps -m at 16
+          cores="''${NIX_BUILD_CORES:-4}"
+          [ "$cores" -gt 0 ] || cores=4
+          [ "$cores" -gt 16 ] && cores=16
+          qemu-img convert \
+            -f qcow2 \
+            -O qcow2 \
+            -c \
+            -o compression_type=zstd \
+            -m "$cores" \
+            ${rawImage}/${baseName}.qcow2 \
+            $out/${baseName}.qcow2
+        ''
       );
     };
 
@@ -70,7 +89,7 @@
   features.neovim.dotfiles = inputs.nvim;
 
   # ensure .config exists with correct ownership before automount
-  systemd.tmpfiles.rules = [ "d /home/matej/.config 0755 matej users -" ];
+  systemd.tmpfiles.rules = [ "d /home/matej/.config 0700 matej users -" ];
 
   # TODO:(@janezicmatej) replace ssh with virtio-console (hvc0) when qemu 11.0 lands
   # https://www.mail-archive.com/qemu-devel@nongnu.org/msg1162844.html
