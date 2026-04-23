@@ -71,6 +71,9 @@
               ];
             };
 
+            # honor persist_mode so electron apps don't re-prompt for screencast every login
+            systemd.user.services.xdg-desktop-portal-wlr.environment.XDPW_PERSIST_MODE = "permanent";
+
             # enable ozone/wayland for electron apps so idle detection works
             environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
