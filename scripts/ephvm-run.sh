@@ -55,6 +55,8 @@ EOF
 main() {
 	setup_colors
 
+	[ "$EUID" -eq 0 ] && die "ephvm-run.sh must not run as root"
+
 	local ssh_port="" memory=4G cpus=2 claude=true disk_size="" serial=false
 	local -a mounts=()
 
@@ -130,7 +132,7 @@ main() {
 
 	local nic_arg="user"
 	if [ -n "$ssh_port" ]; then
-		nic_arg="user,hostfwd=tcp::${ssh_port}-:22"
+		nic_arg="user,hostfwd=tcp:127.0.0.1:${ssh_port}-:22"
 	fi
 
 	local -a qemu_args=(
@@ -141,6 +143,7 @@ main() {
 		-drive "$drive_arg"
 		-nic "$nic_arg"
 		-nographic
+		-sandbox "on,obsolete=deny,elevateprivileges=deny,spawn=deny,resourcecontrol=deny"
 	)
 
 	if [ "$accel" != "tcg" ]; then
@@ -149,7 +152,12 @@ main() {
 
 	local fs_id=0 mount_path name tag
 	for mount_path in "${mounts[@]}"; do
+		[ -e "$mount_path" ] || die "--mount path does not exist: $mount_path"
 		mount_path=$(realpath "$mount_path")
+		# qemu parses -virtfs as csv, a comma in the path would inject options
+		case "$mount_path" in
+		*,*) die "--mount path may not contain commas: $mount_path" ;;
+		esac
 		name=$(basename "$mount_path")
 		tag="m_${name:0:29}"
 		qemu_args+=(
@@ -163,6 +171,9 @@ main() {
 		mkdir -p "$CLAUDE_CONFIG_DIR"
 		local claude_dir
 		claude_dir=$(realpath "$CLAUDE_CONFIG_DIR")
+		case "$claude_dir" in
+		*,*) die "claude config dir may not contain commas: $claude_dir" ;;
+		esac
 
 		qemu_args+=(
 			-virtfs "local,path=$claude_dir,mount_tag=claude,security_model=none,id=fs${fs_id}"
