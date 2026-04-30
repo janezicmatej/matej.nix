@@ -87,6 +87,13 @@ nixpkgs.lib.nixosSystem {
     { nixpkgs.config.allowUnfree = true; }
     { networking.hostName = name; }
 
+    (
+      { pkgs, ... }:
+      {
+        boot.kernelPackages = inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.linuxPackages_6_18;
+      }
+    )
+
     featureEnableModule
     hostConfig
   ]
