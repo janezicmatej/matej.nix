@@ -63,5 +63,5 @@ deploy host remote=host:
     nixos-rebuild switch --flake .#{{host}} --target-host {{remote}} --sudo --ask-sudo-password
 
 # garbage collect old generations
-clean:
-    sudo nix-collect-garbage $(nix eval --raw -f ./nix.nix nix.gc.options)
+clean host=`hostname`:
+    sudo nix-collect-garbage $(nix eval --raw .#nixosConfigurations.{{host}}.config.nix.gc.options)
