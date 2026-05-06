@@ -124,6 +124,7 @@ in
         "localisation"
         "networkmanager"
         "nix-settings"
+        "onepassword"
         "sway"
         "udev"
         "zsh"
