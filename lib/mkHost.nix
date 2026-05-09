@@ -87,6 +87,11 @@ nixpkgs.lib.nixosSystem {
     { nixpkgs.config.allowUnfree = true; }
     { networking.hostName = name; }
 
+    # TEMP:(@janezicmatej) temporary mitigation for dirty frag
+    # blocks esp4/esp6 (CVE-2026-43284) and rxrpc (CVE-2026-43500)
+    # remove once nixpkgs ships a kernel with f4c50a4034e6 and the rxrpc fix
+    { boot.blacklistedKernelModules = [ "esp4" "esp6" "rxrpc" ]; }
+
     featureEnableModule
     hostConfig
   ]
