@@ -2,31 +2,20 @@
 default:
     @just --list
 
-# rebuild and switch
-switch config="":
-    nixos-rebuild switch --flake .{{ if config != "" { "#" + config } else { "" } }} --sudo
-
-# fetch flake inputs
-sync:
-    nix flake prefetch-inputs
+# rebuild the system
+rebuild op="switch" host=`hostname`:
+    nixos-rebuild {{op}} --flake .#{{host}} --sudo
 
 # update flake inputs
 update:
     nix flake update
 
-# update flake inputs, rebuild and switch
-bump: update switch
-
-# update a package to latest version
-update-package pkg:
-    bash packages/{{pkg}}/update.sh
-
 # update all packages with update scripts
-update-package-all:
+update-package:
     @for script in packages/*/update.sh; do bash "$script"; done
 
 # build all packages and hosts
-build:
+check:
     nix flake check
 
 # build installation iso
@@ -36,10 +25,6 @@ iso:
 # run ephemeral VM
 ephvm *ARGS:
     bash scripts/ephvm-run.sh {{ARGS}}
-
-# ssh into running ephemeral VM
-ephvm-ssh port="2222":
-    ssh -p {{port}} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null matej@localhost
 
 # provision a host with nixos-anywhere
 provision host ip:
@@ -59,8 +44,8 @@ provision host ip:
     ssh root@{{ip}} reboot
 
 # deploy config to a remote host
-deploy host remote=host:
-    nixos-rebuild switch --flake .#{{host}} --target-host {{remote}} --sudo --ask-sudo-password
+deploy op="switch" host=`hostname` remote=host:
+    nixos-rebuild {{op}} --flake .#{{host}} --target-host {{remote}} --sudo --ask-sudo-password
 
 # garbage collect old generations
 clean host=`hostname`:
