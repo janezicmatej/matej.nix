@@ -10,16 +10,13 @@
     inputs.nixos-hardware.nixosModules.framework-16-amd-ai-300-series
   ];
 
-  features.bootloader.plymouth.enable = true;
+  features.bootloader.resumeDevice = "/dev/mapper/vg0-swap";
   features.desktop.bluetooth.enable = true;
   features.gnupg.yubikey.enable = true;
   features.udev = {
     ledger.enable = true;
     keyboard-zsa.enable = true;
   };
-  features.power.resumeDevice = "/dev/disk/by-uuid/ff4750e7-3a9f-42c2-bb68-c458a6560540";
-
-  boot.kernelParams = [ "pcie_aspm.policy=powersupersave" ];
 
   programs.nix-ld.libraries = options.programs.nix-ld.libraries.default;
 
