@@ -105,11 +105,7 @@
           # bluetooth
           (lib.mkIf cfg.bluetooth.enable {
             hardware.bluetooth.enable = true;
-            services.blueman = {
-              enable = true;
-              # TEMP:(@janezicmatej) workaround for nixpkgs#514705, fix in nixpkgs#517250
-              withApplet = false;
-            };
+            services.blueman.enable = true;
           })
 
           # apps
