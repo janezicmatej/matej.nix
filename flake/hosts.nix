@@ -55,7 +55,6 @@ in
         "git"
         "gnupg"
         "harmonia"
-        "initrd-ssh"
         "localisation"
         "neovim"
         "networkmanager"

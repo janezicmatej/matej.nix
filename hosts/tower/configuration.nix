@@ -8,7 +8,11 @@
   features.nix-settings.towerCache.enable = false;
   features.bootloader = {
     mode = "lanzaboote";
-    plymouth.enable = true;
+    initrdSsh = {
+      enable = true;
+      networkModule = "r8169";
+      authorizedKeys = userKeys.sshAuthorizedKeys;
+    };
   };
   features.desktop.bluetooth.enable = true;
   features.gnupg.yubikey.enable = true;
@@ -16,17 +20,14 @@
     ledger.enable = true;
     keyboard-zsa.enable = true;
   };
-  features.initrd-ssh = {
-    networkModule = "r8169";
-    authorizedKeys = userKeys.sshAuthorizedKeys;
-  };
 
   # nix store signing
   sops.secrets.nix-signing-key.sopsFile = ../../secrets/tower.yaml;
   nix.settings.secret-key-files = [ config.sops.secrets.nix-signing-key.path ];
 
   boot.kernelParams = [ "btusb.reset=1" ];
-  # early kms so plymouth lands on amdgpu, not simpledrm
+  # pairs with bootloader's simpledrm initcall blacklist: amdgpu owns fbcon
+  # from the start, no driver-swap mode-set
   hardware.amdgpu.initrd.enable = true;
 
   services.udisks2.enable = true;
