@@ -98,6 +98,14 @@ nixpkgs.lib.nixosSystem {
       ];
     }
 
+    # cap unit stop timeout so a single misbehaving app (electron, etc) can't
+    # block poweroff for the full 90s default. user-scope cap is required for
+    # session-N.scope to honor it. see discourse/49711
+    {
+      systemd.settings.Manager.DefaultTimeoutStopSec = "10s";
+      systemd.user.extraConfig = "DefaultTimeoutStopSec=10s";
+    }
+
     featureEnableModule
     hostConfig
   ]
