@@ -98,6 +98,10 @@
 
             boot.initrd.systemd.enable = true;
 
+            # wait forever at the luks prompt instead of timing out the device
+            # job; applies whether the prompt is local or forwarded via initrd ssh
+            boot.initrd.systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
+
             # block simpledrm so fbcon defers until the gpu driver binds; avoids
             # the simpledrm -> real-driver fbcon transition that mangles console
             # text and leaves the luks prompt typing offset from the visible
@@ -136,8 +140,6 @@
           })
 
           (lib.mkIf cfg.initrdSsh.enable {
-            boot.initrd.systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
-
             boot.initrd.availableKernelModules = [ cfg.initrdSsh.networkModule ];
 
             boot.kernelParams = lib.mkIf cfg.initrdSsh.ip.enable [
