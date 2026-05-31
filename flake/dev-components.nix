@@ -14,11 +14,9 @@ let
   mkNode = nodejs: {
     packages = [
       nodejs
-      pkgs.corepack
+      (pkgs.pnpm.override { withNode = false; })
+      (pkgs.yarn.override { withNode = false; })
     ];
-    env = {
-      COREPACK_ENABLE_STRICT = "0";
-    };
   };
 
   mkUv = python: {
