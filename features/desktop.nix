@@ -87,6 +87,9 @@
               inherit (cfg.theme) polarity;
               image = cfg.theme.wallpaper;
               base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.theme.scheme}.yaml";
+
+              # TEMP:(@janezicmatej) stylix kmscon target sets nixpkgs-removed options
+              targets.kmscon.enable = false;
             };
           }
 
