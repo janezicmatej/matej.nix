@@ -103,7 +103,7 @@ nixpkgs.lib.nixosSystem {
     # session-N.scope to honor it. see discourse/49711
     {
       systemd.settings.Manager.DefaultTimeoutStopSec = "10s";
-      systemd.user.extraConfig = "DefaultTimeoutStopSec=10s";
+      systemd.user.settings.Manager.DefaultTimeoutStopSec = "10s";
     }
 
     featureEnableModule
