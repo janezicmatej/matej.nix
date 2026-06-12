@@ -127,7 +127,7 @@
               rocketchat-desktop
               telegram-desktop
               slack
-              jellyfin-media-player
+              jellyfin-desktop
               cider-2
               mpv
               ffmpeg
