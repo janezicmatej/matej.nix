@@ -1,6 +1,11 @@
 {
   nixos =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      user,
+      ...
+    }:
     let
       cfg = config.features.networkmanager;
     in
@@ -13,6 +18,8 @@
           "1.1.1.1"
           "8.8.8.8"
         ];
+
+        users.users.${user}.extraGroups = [ "networkmanager" ];
       };
     };
 }
