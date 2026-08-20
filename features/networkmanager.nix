@@ -3,6 +3,7 @@
     {
       config,
       lib,
+      pkgs,
       user,
       ...
     }:
@@ -20,6 +21,9 @@
         ];
 
         users.users.${user}.extraGroups = [ "networkmanager" ];
+
+        # nm-connection-editor handles wpa-enterprise where nmtui cannot
+        environment.systemPackages = [ pkgs.networkmanagerapplet ];
       };
     };
 }
