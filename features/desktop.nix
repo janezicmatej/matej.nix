@@ -115,12 +115,22 @@
           (lib.mkIf cfg.apps.enable {
             programs.thunderbird.enable = true;
 
+            # NOTE:(@janezicmatej) bolt's enableRS3 fhs env pulls openssl 1.1, eol since 2023
+            nixpkgs.config = {
+              permittedInsecurePackages = [ "openssl-1.1.1w" ];
+
+              # Add this to bypass the "broken" status
+              problems.handlers = {
+                bolt-launcher.broken = "warn"; # You can also use "ignore" to completely silence it
+              };
+            };
+
             environment.systemPackages = with pkgs; [
               ghostty
               google-chrome
               zathura
               calibre
-              bolt-launcher
+              (bolt-launcher.override { enableRS3 = true; })
               libnotify
               bibata-cursors
               discord
