@@ -72,7 +72,7 @@
 
           # greeter
           (lib.mkIf cfg.greeter.enable {
-            programs.regreet = {
+            services.displayManager.regreet = {
               enable = true;
               cageArgs = [
                 "-s"

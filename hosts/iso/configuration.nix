@@ -1,5 +1,12 @@
-{ lib, userKeys, ... }:
+{ lib, userKeys, modulesPath, ... }:
 {
+  imports = [
+    # This built-in module sets up the mock root fs and ISO bootloader automatically
+    (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
+  ];
+
+  boot.zfs.forceImportRoot = false;
+
   features.nix-settings.towerCache.enable = false;
   image.modules.iso-installer = {
     isoImage.squashfsCompression = "zstd -Xcompression-level 6";
