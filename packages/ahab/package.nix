@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  version = "v0.4.2";
+  version = "v0.5.0";
 in
 pkgs.rustPlatform.buildRustPackage {
   pname = "ahab";
@@ -12,25 +12,28 @@ pkgs.rustPlatform.buildRustPackage {
     owner = "janezicmatej";
     repo = "ahab";
     rev = version;
-    sha256 = "sha256-hJg6vRaqTu9a3fua2J/e6akdJQffAk6TBAzJRBD5qHQ=";
+    sha256 = "sha256-Fy1T95OA4RwMLJF1EP0hGlgrVFl8C0P66YGeOPWspSU=";
   };
 
-  cargoHash = "sha256-T/2+kxa5X2fmMQs023JN9ZDihExfYvPnunJ8b2Irwoo=";
+  cargoHash = "sha256-PeZPQY9OGGQ1R+mSRgOvZxdcFpgqV12wAxmHiDLZyf8=";
 
   buildType = "debug";
 
   nativeBuildInputs = [ pkgs.installShellFiles ];
 
+  # NOTE:(@janezicmatej) integration tests shell out to git
+  nativeCheckInputs = [ pkgs.git ];
+
+  # NOTE:(@janezicmatej) build.rs rejects a relative completions dir since v0.5.0
   preBuild = ''
-    mkdir -p completions
+    export SHELL_COMPLETIONS_DIR="$NIX_BUILD_TOP/completions"
+    mkdir -p "$SHELL_COMPLETIONS_DIR"
   '';
 
-  SHELL_COMPLETIONS_DIR = "completions";
-
   postInstall = ''
-    installShellCompletion --bash completions/ahab.bash
-    installShellCompletion --zsh completions/_ahab
-    installShellCompletion --fish completions/ahab.fish
+    installShellCompletion --bash "$NIX_BUILD_TOP/completions/ahab.bash"
+    installShellCompletion --zsh "$NIX_BUILD_TOP/completions/_ahab"
+    installShellCompletion --fish "$NIX_BUILD_TOP/completions/ahab.fish"
   '';
 
   meta = {
