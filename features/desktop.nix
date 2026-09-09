@@ -149,7 +149,7 @@
               yazi
               nemo
               file-roller
-              libreoffice-still
+              libreoffice-stable
             ];
 
             # kindle udev rules for calibre
