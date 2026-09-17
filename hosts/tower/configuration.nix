@@ -6,6 +6,11 @@
 
 {
   features.nix-settings.towerCache.enable = false;
+  features.ssh-client.fragments = {
+    personal.sopsFile = ../../secrets/ssh/personal.conf;
+    work.sopsFile = ../../secrets/ssh/work.conf;
+    iap.sopsFile = ../../secrets/ssh/iap.conf;
+  };
   features.bootloader = {
     mode = "lanzaboote";
     initrdSsh = {
