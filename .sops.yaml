@@ -34,3 +34,9 @@ creation_rules:
     key_groups:
       - pgp: [*matej]
         age: [*tower, *fw16, *floo, *cube]
+
+  # ssh_config fragments (binary format, desktop hosts only)
+  - path_regex: ^secrets/ssh/.*\.conf$
+    key_groups:
+      - pgp: [*matej]
+        age: [*tower, *fw16]
