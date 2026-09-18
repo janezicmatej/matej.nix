@@ -162,9 +162,13 @@
             # forward LUKS password prompt to the ssh session (systemd-initrd idiom)
             boot.initrd.systemd.users.root.shell = "/bin/systemd-tty-ask-password-agent";
 
+            # systemd-networkd retries DHCP indefinitely, unlike udhcpc.
+            # match on link type, not Driver=: networkd reads the driver once via
+            # ethtool by interface name, and in the initrd that races the
+            # eth0 -> enoX rename (ENODEV), leaving the link unmanaged for good
             boot.initrd.systemd.network.networks = lib.mkIf (!cfg.initrdSsh.ip.enable) {
               "10-initrd" = {
-                matchConfig.Driver = cfg.initrdSsh.networkModule;
+                matchConfig.Type = "ether";
                 networkConfig.DHCP = "yes";
               };
             };
