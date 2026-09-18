@@ -11,6 +11,11 @@
   ];
 
   features.bootloader.resumeDevice = "/dev/mapper/vg0-swap";
+  features.ssh-client.fragments = {
+    personal.sopsFile = ../../secrets/ssh/personal.conf;
+    work.sopsFile = ../../secrets/ssh/work.conf;
+    iap.sopsFile = ../../secrets/ssh/iap.conf;
+  };
   features.desktop.bluetooth.enable = true;
   features.gnupg.yubikey.enable = true;
   features.udev = {
