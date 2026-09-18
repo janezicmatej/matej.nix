@@ -11,9 +11,22 @@
       pinned = {
         nixpkgs-stable = {
           mcp-nixos = null;
-          rocketchat-desktop = "sso login in the server webview is broken since 4.16.0";
         };
         nixpkgs-master = { };
+      };
+
+      overrides = {
+        # nixpkgs writes `Exec=rocketchat-desktop` without a field code. glib-based
+        # launchers (xdg-desktop-portal OpenURI, which chrome prefers) then fall back
+        # to %f and drop non-file uris, so the rocketchat://auth deeplink that
+        # completes browser sso never reaches the running app
+        # TODO:(@janezicmatej) drop once nixpkgs adds %U to the desktop entry
+        rocketchat-desktop = prev.rocketchat-desktop.overrideAttrs (old: {
+          postFixup = (old.postFixup or "") + ''
+            substituteInPlace $out/share/applications/rocketchat-desktop.desktop \
+              --replace-fail 'Exec=rocketchat-desktop' 'Exec=rocketchat-desktop %U'
+          '';
+        });
       };
 
       version = pkg: pkg.version or (lib.getVersion pkg);
@@ -31,5 +44,5 @@
           ) pkg
         ) pins;
     in
-    lib.concatMapAttrs pinFrom pinned;
+    lib.concatMapAttrs pinFrom pinned // overrides;
 }
