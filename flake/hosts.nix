@@ -54,6 +54,7 @@ in
         "git"
         "gnupg"
         "harmonia"
+        "hifi"
         "localisation"
         "neovim"
         "networkmanager"
