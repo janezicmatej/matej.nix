@@ -126,6 +126,7 @@
               slack
               jellyfin-desktop
               cider-2
+              spotify
               mpv
               ffmpeg
               wf-recorder
