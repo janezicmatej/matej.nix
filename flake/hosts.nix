@@ -71,7 +71,7 @@ in
       ];
     };
 
-    # nixos-rebuild build-image --image-variant install-iso --flake .#iso
+    # nixos-rebuild build-image --image-variant iso-installer --flake .#iso
     iso = mkHost "iso" {
       system = "x86_64-linux";
       user = "matej";

@@ -10,6 +10,8 @@
     inputs.nixos-hardware.nixosModules.framework-16-amd-ai-300-series
   ];
 
+  # no tailscale on this host, so tower's cache is unreachable
+  features.nix-settings.towerCache.enable = false;
   features.desktop = {
     apps.enable = false;
     internalCA.enable = false;

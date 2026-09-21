@@ -87,9 +87,6 @@
               inherit (cfg.theme) polarity;
               image = cfg.theme.wallpaper;
               base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.theme.scheme}.yaml";
-
-              # TEMP:(@janezicmatej) stylix kmscon target sets nixpkgs-removed options
-              targets.kmscon.enable = false;
             };
           }
 
@@ -169,6 +166,7 @@
   home =
     {
       lib,
+      options,
       inputs,
       osConfig,
       ...
@@ -182,6 +180,10 @@
           {
             home.file.".assets".source = inputs.assets;
           }
+
+          (lib.optionalAttrs (options ? stylix) {
+            stylix.targets.rofi.enable = false;
+          })
 
           (lib.mkIf cfg.apps.enable {
             # TODO:(@janezicmatej) consider moving nvim desktop entry to neovim feature
