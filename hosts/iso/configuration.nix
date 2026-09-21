@@ -1,4 +1,9 @@
-{ lib, userKeys, modulesPath, ... }:
+{
+  lib,
+  userKeys,
+  modulesPath,
+  ...
+}:
 {
   imports = [
     # This built-in module sets up the mock root fs and ISO bootloader automatically
