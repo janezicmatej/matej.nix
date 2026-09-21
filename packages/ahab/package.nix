@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  version = "v0.5.0";
+  version = "v0.6.0";
 in
 pkgs.rustPlatform.buildRustPackage {
   pname = "ahab";
@@ -12,10 +12,10 @@ pkgs.rustPlatform.buildRustPackage {
     owner = "janezicmatej";
     repo = "ahab";
     rev = version;
-    sha256 = "sha256-Fy1T95OA4RwMLJF1EP0hGlgrVFl8C0P66YGeOPWspSU=";
+    sha256 = "sha256-vklDPlYP4Du7e1YbhgIkyvzo15qNP1WYFY3YNA3hC4Q=";
   };
 
-  cargoHash = "sha256-PeZPQY9OGGQ1R+mSRgOvZxdcFpgqV12wAxmHiDLZyf8=";
+  cargoHash = "sha256-UfwO50la1F7Jimsk9s5Rwc66yfhatEaia5sX47oIGLI=";
 
   buildType = "debug";
 
