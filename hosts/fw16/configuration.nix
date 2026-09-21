@@ -23,7 +23,6 @@
   };
 
   services.gnome.gnome-keyring.enable = true;
-  services.teamviewer.enable = true;
 
   services.hardware.bolt.enable = true;
   hardware.bluetooth.powerOnBoot = true;
