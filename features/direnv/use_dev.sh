@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # composable nix devshell from matej.nix
-# usage in .envrc: use dev uv_14 pg_18 --extra cairo pkg-config
+# usage in .envrc: use dev uv_14 node_24 --extra cairo pkg-config
 
 # generates a flake and delegates to use_flake at the calling scope
 use_dev() {
