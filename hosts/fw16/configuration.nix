@@ -1,6 +1,5 @@
 {
   lib,
-  options,
   inputs,
   ...
 }:
@@ -22,8 +21,6 @@
     ledger.enable = true;
     keyboard-zsa.enable = true;
   };
-
-  programs.nix-ld.libraries = options.programs.nix-ld.libraries.default;
 
   services.gnome.gnome-keyring.enable = true;
   services.teamviewer.enable = true;

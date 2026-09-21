@@ -22,10 +22,6 @@ main() {
 			"$GC_ROOT_DIR/$host" || failed=1
 	done
 
-	build "ephvm-image" \
-		"$FLAKE_REF#nixosConfigurations.ephvm.config.system.build.images.qemu" \
-		"$GC_ROOT_DIR/ephvm-image" || failed=1
-
 	return $failed
 }
 

@@ -87,9 +87,6 @@
               inherit (cfg.theme) polarity;
               image = cfg.theme.wallpaper;
               base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.theme.scheme}.yaml";
-
-              # TEMP:(@janezicmatej) stylix kmscon target sets nixpkgs-removed options
-              targets.kmscon.enable = false;
             };
           }
 
@@ -115,22 +112,12 @@
           (lib.mkIf cfg.apps.enable {
             programs.thunderbird.enable = true;
 
-            # NOTE:(@janezicmatej) bolt's enableRS3 fhs env pulls openssl 1.1, eol since 2023
-            nixpkgs.config = {
-              permittedInsecurePackages = [ "openssl-1.1.1w" ];
-
-              # Add this to bypass the "broken" status
-              problems.handlers = {
-                bolt-launcher.broken = "warn"; # You can also use "ignore" to completely silence it
-              };
-            };
-
             environment.systemPackages = with pkgs; [
               ghostty
               google-chrome
               zathura
               calibre
-              (bolt-launcher.override { enableRS3 = true; })
+              bolt-launcher
               libnotify
               bibata-cursors
               discord
@@ -169,6 +156,7 @@
   home =
     {
       lib,
+      options,
       inputs,
       osConfig,
       ...
@@ -182,6 +170,10 @@
           {
             home.file.".assets".source = inputs.assets;
           }
+
+          (lib.optionalAttrs (options ? stylix) {
+            stylix.targets.rofi.enable = false;
+          })
 
           (lib.mkIf cfg.apps.enable {
             # TODO:(@janezicmatej) consider moving nvim desktop entry to neovim feature

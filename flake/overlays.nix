@@ -9,9 +9,7 @@
       inherit (final.stdenv.hostPlatform) system;
 
       pinned = {
-        nixpkgs-stable = {
-          mcp-nixos = null;
-        };
+        nixpkgs-stable = { };
         nixpkgs-master = { };
       };
 

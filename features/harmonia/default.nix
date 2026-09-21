@@ -14,7 +14,6 @@
         "tower"
         "cube"
         "floo"
-        "ephvm"
       ];
       flakeRef = inputs.self.outPath;
     in

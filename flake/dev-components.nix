@@ -14,7 +14,7 @@ let
   mkNode = nodejs: {
     packages = [
       nodejs
-      (pkgs.pnpm.override { withNode = false; })
+      pkgs.pnpm
       (pkgs.yarn.override { withNode = false; })
     ];
   };
@@ -37,15 +37,14 @@ let
   };
 
   components = {
-    uv_10 = mkUv pkgs.python310;
     uv_11 = mkUv pkgs.python311;
     uv_12 = mkUv pkgs.python312;
     uv_13 = mkUv pkgs.python313;
     uv_14 = mkUv pkgs.python314;
 
-    node_20 = mkNode pkgs.nodejs_20;
     node_22 = mkNode pkgs.nodejs_22;
     node_24 = mkNode pkgs.nodejs_24;
+    node_26 = mkNode pkgs.nodejs_26;
 
     rust = {
       packages = [

@@ -16,7 +16,6 @@ in
       user = "matej";
       features = [
         "bootloader"
-        "claude"
         "desktop"
         "dev"
         "direnv"
@@ -47,7 +46,6 @@ in
       user = "matej";
       features = [
         "bootloader"
-        "claude"
         "desktop"
         "dev"
         "direnv"
@@ -73,7 +71,7 @@ in
       ];
     };
 
-    # nixos-rebuild build-image --image-variant install-iso --flake .#iso
+    # nixos-rebuild build-image --image-variant iso-installer --flake .#iso
     iso = mkHost "iso" {
       system = "x86_64-linux";
       user = "matej";
@@ -128,25 +126,6 @@ in
         "onepassword"
         "sway"
         "udev"
-        "zsh"
-      ];
-    };
-
-    ephvm = mkHost "ephvm" {
-      system = "x86_64-linux";
-      user = "matej";
-      features = [
-        "claude"
-        "dev"
-        "docker"
-        "git"
-        "gnupg"
-        "localisation"
-        "neovim"
-        "nix-settings"
-        "openssh"
-        "shell"
-        "vm-guest"
         "zsh"
       ];
     };
