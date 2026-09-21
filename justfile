@@ -22,10 +22,6 @@ check:
 iso:
     nixos-rebuild build-image --image-variant iso-installer --flake .#iso
 
-# run ephemeral VM
-ephvm *ARGS:
-    bash scripts/ephvm-run.sh {{ARGS}}
-
 # provision a host with nixos-anywhere
 provision host ip:
     #!/usr/bin/env bash

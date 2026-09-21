@@ -11,7 +11,6 @@ _: {
             pkgs.statix
             pkgs.shellcheck
             pkgs.shfmt
-            pkgs.qemu
             pkgs.sops
             pkgs.ssh-to-age
           ];
