@@ -98,7 +98,7 @@
               ServerAliveInterval = 60;
               ServerAliveCountMax = 3;
               ControlMaster = "auto";
-              ControlPath = "~/.ssh/cm-%C";
+              ControlPath = "\${XDG_RUNTIME_DIR}/ssh-cm-%C";
               ControlPersist = "10m";
               HashKnownHosts = true;
               StrictHostKeyChecking = "accept-new";
