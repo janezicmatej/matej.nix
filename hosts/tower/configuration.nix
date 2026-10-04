@@ -37,13 +37,5 @@
 
   services.udisks2.enable = true;
 
-  # higher sample rate for audio equipment
-  services.pipewire.extraConfig.pipewire.adjust-sample-rate = {
-    "context.properties" = {
-      "default.clock.rate" = 192000;
-      "default.allowed-rates" = [ 192000 ];
-    };
-  };
-
   system.stateVersion = "25.05";
 }
