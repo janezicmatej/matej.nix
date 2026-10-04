@@ -33,6 +33,9 @@ let
     shellHook = ''
       unset PYTHONPATH
       export UV_PROJECT_ENVIRONMENT="''${XDG_DATA_HOME:-$HOME/.local/share}/dev-venvs/$(basename "$PWD")-$(echo "$PWD" | sha256sum | cut -c1-8)"
+      # activate the project venv; works before uv sync creates it
+      export VIRTUAL_ENV="$UV_PROJECT_ENVIRONMENT"
+      export PATH="$VIRTUAL_ENV/bin:$PATH"
     '';
   };
 
