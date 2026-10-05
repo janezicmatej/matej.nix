@@ -9,7 +9,7 @@ pkgs.stdenv.mkDerivation {
   inherit version;
 
   src = pkgs.fetchurl {
-    url = "http://ipa2.matheo.si/ipa/config/ca.crt";
+    url = "https://sso.matheo.si/ipa/config/ca.crt";
     sha256 = "sha256-C6r62emPyw1kxUZOTWhwABNyBEWTTLMEVX5Ma/2i9ls";
   };
 
