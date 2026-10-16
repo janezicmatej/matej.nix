@@ -15,6 +15,7 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
+        "admin-tools"
         "bootloader"
         "desktop"
         "dev"
@@ -46,6 +47,7 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
+        "admin-tools"
         "bootloader"
         "desktop"
         "dev"
@@ -79,6 +81,7 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
+        "admin-tools"
         "nix-settings"
         "openssh"
         "zsh"
@@ -89,6 +92,7 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
+        "admin-tools"
         "bootloader"
         "localisation"
         "nix-settings"
@@ -105,6 +109,7 @@ in
       system = "x86_64-linux";
       user = "matej";
       features = [
+        "admin-tools"
         "filedrop"
         "localisation"
         "nix-settings"
