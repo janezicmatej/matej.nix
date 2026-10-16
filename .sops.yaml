@@ -35,6 +35,12 @@ creation_rules:
       - pgp: [*matej]
         age: [*tower, *fw16, *floo, *cube]
 
+  # nas credentials (hosts that mount zeus shares)
+  - path_regex: ^secrets/nas\.yaml$
+    key_groups:
+      - pgp: [*matej]
+        age: [*tower, *fw16]
+
   # ssh_config fragments (binary format, desktop hosts only)
   - path_regex: ^secrets/ssh/.*\.conf$
     key_groups:
