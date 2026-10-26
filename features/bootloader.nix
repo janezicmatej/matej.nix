@@ -96,8 +96,6 @@
               inherit (cfg) configurationLimit;
             };
 
-            boot.initrd.systemd.enable = true;
-
             # wait forever at the luks prompt instead of timing out the device
             # job; applies whether the prompt is local or forwarded via initrd ssh
             boot.initrd.systemd.settings.Manager.DefaultDeviceTimeoutSec = "infinity";
